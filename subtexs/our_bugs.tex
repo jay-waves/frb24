@@ -57,13 +57,14 @@ void CostmapSubscriber::toCostmap2D()
 在Naviagtion2\href{https://github.com/ros-planning/navigation2/pull/3958}{PR\#3972}, 
 \href{https://github.com/ros-planning/navigation2/pull/3958}{PR\#3958}, 
 \href{https://github.com/ros-planning/navigation2/issues/3940}{Issue\#3940}中, 
-我们报告了一个典型的并发bug，本系统通过插桩延迟技术，找到了Navigation2项目中Costmap结构数据竞争的根本原因，
-删除了之前大量不必要的检查。
+我们报告了一个典型的并发bug，本系统通过插桩延迟技术，找到了Navigation2项目中Costmap结构
+数据竞争的根本原因，删除了之前大量不必要的检查。
 
-此bug发生在关闭期间，ROS系统使用Lifecycle状态机机制来管理节点生命周期，Controller、Planner、
-CostmapROS都是具有生命周期的节点，CostmapROS是Controller和Planner的子节点（独立线程）。
-当ROS2系统关闭时，Lifecycle状态机发送同一关闭信号，这三种节点都会直接对该信号进行响应然后执行资源释放程序，
-此时三者关闭顺序是不一致且不确定的。
+此bug发生在关闭期间，ROS系统使用Lifecycle状态机机制来管理节点生命周
+期，Controller、Planner、 CostmapROS都是具有生命周期的节点，CostmapROS是
+Controller和Planner的子节点（独立线程）。当ROS2系统关闭时，Lifecycle状态机发送同
+一关闭信号，这三种节点都会直接对该信号进行响应然后执行资源释放程序，此时三者关闭
+顺序是不一致且不确定的。
 
 如果子线程CostmapROS节点已经自行释放，Controller或Planner实质失去了对其的控制权，
 如果它们仍试图访问CostmapROS，就产生了重复释放（UAF）、资源冲突等一系列并发问题，

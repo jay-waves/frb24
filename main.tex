@@ -243,23 +243,27 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 \begin{spacing}{1.5}
   \setParDis %设置段间距为 0
 % 500z字? 目的, 意义, 研究方法, 成果, 结论
-商用机器人、自动驾驶等领域的快速发展，带动了相关软件工具的进步。其中，机器人操作系统（ROS2），以其开源、跨平台、高效的软件框架
-及丰富的工具库而深受开发者喜爱，在学界、商业应用中得到广泛应用。与此同时，机器人操作系统也存在开源软件共有的安全漏洞多、不稳定
-等问题，制约着其进一步发展，也威胁着相关应用的安全。
+商用机器人、自动驾驶等领域的快速发展，带动了相关软件工具的进步。其中，机器人操作
+系统（ROS2），以其开源、跨平台、高效的软件框架及丰富的工具库而深受开发者喜爱，在
+学界、商业应用中得到广泛应用。与此同时，机器人操作系统也存在开源软件共有的安全漏
+洞多、不稳定等问题，制约着其进一步发展，也威胁着相关应用的安全。
 
-机器人操作系统相关程序亟需一种高效的测试方法，面对这一场景，我们选择将自动模糊测试技术（Fuzzing）引入对机器人操作系统的测试。
-通过随机变异测试输入，并加入反馈引导，模糊测试不仅提高了测试的自动化程度，还能有效地探索软件异常路径，揭露隐蔽漏洞，显著改善
-了传统软件测试方法的繁琐性和低效性。
+机器人操作系统相关程序亟需一种高效的测试方法，面对这一场景，我们选择将自动模糊测
+试技术（Fuzzing）引入对机器人操作系统的测试。通过随机变异测试输入，并加入反馈引
+导，模糊测试不仅提高了测试的自动化程度，还能有效地探索软件异常路径，揭露隐蔽漏
+洞，显著改善了传统软件测试方法的繁琐性和低效性。
 
-为了提高测试效率，我们的模糊测试对机器人系统进行针对性优化。针对通信网络环境的不稳定性，本框架选择将机器人收到的通信消息
-等多维度输入进行随机化变异；针对机器人多进程多线程的软件特点，本框架通过程序插桩延迟来提高数据竞争概率；针对机器人程序弱状态特点，
-本框架通过流量分析等黑盒手段，来辅助推测程序内部状态。
+为了提高测试效率，我们的模糊测试对机器人系统进行针对性优化。针对通信网络环境的不
+稳定性，本框架选择将机器人收到的通信消息等多维度输入进行随机化变异；针对机器人多
+进程多线程的软件特点，本框架通过程序插桩延迟来提高数据竞争概率；针对机器人程序弱
+状态特点，本框架通过流量分析等黑盒手段，来辅助推测程序内部状态。
 
-本作品设计的测试框架短期内共发掘20个ROS2相关软件的内存漏洞、并发漏洞，其中11个得到开发者确认修复，其中有4个重要漏洞被
-美国通用漏洞披露（CVE）收录，7个通过中国国家漏洞库（CNVD）二级审核，正在等待三级审核。
+本作品设计的测试框架短期内共发掘20个ROS2相关软件的内存漏洞、并发漏洞，其中11个得
+到开发者确认修复，其中有4个重要漏洞被美国通用漏洞披露（CVE）收录，7个通过中国国
+家漏洞库（CNVD）二级审核，正在等待三级审核。
 
-综上，本作品——针对机器人系统的模糊测试框架在软件测试中有较高实践价值，已为开源社区贡献多次漏洞修复，并可高效地移植用于测试
-其他机器人程序。
+综上，本作品——针对机器人系统的模糊测试框架在软件测试中有较高实践价值，已为开源社
+区贡献多次漏洞修复，并可高效地移植用于测试其他机器人程序。
 
 
 \end{spacing}
@@ -272,30 +276,33 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 \begin{adjustwidth}{0.42cm}{0.42cm}
   \setParDis %设置段间距为 0
 
-The swift advancement in commercial robotics and autonomous driving has spurred 
-the development of associated software tools, notably the Robot Operating System 
-(ROS2). Celebrated for its open-source, cross-platform capabilities, and extensive 
-toolkit, ROS2 has garnered widespread adoption across academia and industry. 
-However, its growth is hampered by common open-source software issues like 
-security vulnerabilities and instability, posing risks to application safety.
+The swift advancement in commercial robotics and autonomous driving has spurred
+the development of associated software tools, notably the Robot Operating System
+(ROS2). Celebrated for its open-source, cross-platform capabilities, and
+extensive toolkit, ROS2 has garnered widespread adoption across academia and
+industry. However, its growth is hampered by common open-source software issues
+like security vulnerabilities and instability, posing risks to application
+safety.
 
-Addressing the need for efficient testing in \textbf{ROS2-related programs}, we introduced 
-automatic \textbf{fuzz} testing to enhance software reliability. By employing 
-randomized mutations of test inputs and feedback guidance, fuzz testing significantly 
-elevates automation and efficacy in exploiting vulnerabilities, outpacing 
-traditional testing in identifing uncovering software exception.
+Addressing the need for efficient testing in \textbf{ROS2-related programs}, we
+introduced automatic \textbf{fuzz} testing to enhance software reliability. By
+employing randomized mutations of test inputs and feedback guidance, fuzz
+testing significantly elevates automation and efficacy in exploiting
+vulnerabilities, outpacing traditional testing in identifing uncovering software
+exception.
 
-Our framework, tailored for robotic systems, addresses communication network instability 
-by randomizing inputs like received communication messages. It targets software's 
-multi-process and multi-threaded nature by increasing data race probabilities via program 
-instrumentation delays. Additionally, to navigate the challenges posed by robots' weak states, 
-our framework utilizes black-box methods, such as traffic analysis, to infer internal states.
-The approach led to \textbf{the discovery of 20 ROS2 software vulnerabilities, with 11 
-confirmed and fixed by developers, including 4 recognized by the US's CVE and 7 awaiting 
-final review by China's CNVD.}
+Our framework, tailored for robotic systems, addresses communication network
+instability by randomizing inputs like received communication messages. It
+targets software's multi-process and multi-threaded nature by increasing data
+race probabilities via program instrumentation delays. Additionally, to navigate
+the challenges posed by robots' weak states, our framework utilizes black-box
+methods, such as traffic analysis, to infer internal states. The approach led to
+\textbf{the discovery of 20 ROS2 software vulnerabilities, with 11 confirmed and
+fixed by developers, including 4 recognized by the US's CVE and 7 awaiting final
+review by China's CNVD.}
 
-This work demonstrates the high practical value of our fuzz testing framework for 
-robotic systems, contributing significantly to the open-source community and 
+This work demonstrates the high practical value of our fuzz testing framework
+for robotic systems, contributing significantly to the open-source community and
 efficiently adaptable for testing various robot programs.
 
 \textbf{Keywords: Fuzz, ROS2, Concurrent Vulnerability, Memory Vulnerability}
