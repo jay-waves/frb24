@@ -242,19 +242,29 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 \section*{摘要}
 \begin{spacing}{1.5}
   \setParDis %设置段间距为 0
-  本Latex模板是北京航空航天大学大学\Fengru 论文模板, 由北京航空航天大学校团委
-基于GitHub用户\textbf{\textit{Somedaywilldo}}与\textbf{\textit{cpfy}}的成果迭代
-开发而来。在此由衷感谢所有开发者对本模板的贡献与对“冯如杯”竞赛的大力支持。
+% 500z字? 目的, 意义, 研究方法, 成果, 结论
+商用机器人、自动驾驶等领域的快速发展，带动了相关软件工具的进步。其中，机器人操作系统（ROS2），以其开源、跨平台、高效的软件框架
+及丰富的工具库而深受开发者喜爱，在学界、商业应用中得到广泛应用。与此同时，机器人操作系统也存在开源软件共有的安全漏洞多、不稳定
+等问题，制约着其进一步发展，也威胁着相关应用的安全。
 
-摘要内容包括：“摘要”字样，摘要正文，关键词。在摘要的最下方另起一行，用显著的字符注明文本的关键词。
+机器人操作系统相关程序亟需一种高效的测试方法，面对这一场景，我们选择将自动模糊测试技术（Fuzzing）引入对机器人操作系统的测试。
+通过随机变异测试输入，并加入反馈引导，模糊测试不仅提高了测试的自动化程度，还能有效地探索软件异常路径，揭露隐蔽漏洞，显著改善
+了传统软件测试方法的繁琐性和低效性。
 
-摘要是论文内容的简短陈述，应体现论文工作的核心思想。摘要一般约500字。摘要内容应涉及本项科研工作的目的和意义、研究思想和方法、研究成果和结论。
+为了提高测试效率，我们的模糊测试对机器人系统进行针对性优化。针对通信网络环境的不稳定性，本框架选择将机器人收到的通信消息
+等多维度输入进行随机化变异；针对机器人多进程多线程的软件特点，本框架通过程序插桩延迟来提高数据竞争概率；针对机器人程序弱状态特点，
+本框架通过流量分析等黑盒手段，来辅助推测程序内部状态。
 
-关键词是为用户查找文献，从文中选取出来用来揭示全文主题内容的一组词语或术语，应尽量采用词表中的规范词（参照相应的技术术语标准）。关键词一般为3到8个，按词条的外延层次排列。关键词之间用逗号分开，最后一个关键词后不打标点符号。
+本作品设计的测试框架短期内共发掘20个ROS2相关软件的内存漏洞、并发漏洞，其中11个得到开发者确认修复，其中有4个重要漏洞被
+美国通用漏洞披露（CVE）收录，7个通过中国国家漏洞库（CNVD）二级审核，正在等待三级审核。
+
+综上，本作品——针对机器人系统的模糊测试框架在软件测试中有较高实践价值，已为开源社区贡献多次漏洞修复，并可高效地移植用于测试
+其他机器人程序。
+
 
 \end{spacing}
     
-\textbf{关键词：}模糊测试技术，机器人操作系统，并发漏洞检测，内存安全漏洞检测，关键词5
+\textbf{关键词：}自动模糊测试技术，机器人操作系统，并发漏洞检测，内存安全漏洞检测
 
 \newpage
 \section*{\textbf{Abstract}} % XSP 2023/3/8: Abstract 加粗
@@ -262,20 +272,33 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 \begin{adjustwidth}{0.42cm}{0.42cm}
   \setParDis %设置段间距为 0
 
-\qquad This Latex template for the 33rd Fengru Cup Competition of 
-Beihang University, is developed by Communist Youth League Committee of BUAA 
-iteratively based on the contribution of GitHub 
-users \textbf{\textit{Somedaywilldo}} and \textbf{\textit{cpfy}}. 
-Here, we would like to thank all the developers for their 
-contributions to this template and for their support of the Fengru Cup Competition.
+The swift advancement in commercial robotics and autonomous driving has spurred 
+the development of associated software tools, notably the Robot Operating System 
+(ROS2). Celebrated for its open-source, cross-platform capabilities, and extensive 
+toolkit, ROS2 has garnered widespread adoption across academia and industry. 
+However, its growth is hampered by common open-source software issues like 
+security vulnerabilities and instability, posing risks to application safety.
 
-The abstract includes: the word "Abstract", the body of the abstract, and the keywords. On a separate line at the bottom of the abstract, indicate the key words of the text in prominent characters.
+Addressing the need for efficient testing in \textbf{ROS2-related programs}, we introduced 
+automatic \textbf{fuzz} testing to enhance software reliability. By employing 
+randomized mutations of test inputs and feedback guidance, fuzz testing significantly 
+elevates automation and efficacy in exploiting vulnerabilities, outpacing 
+traditional testing in identifing uncovering software exception.
 
-The abstract is a short statement of the content of the paper and should reflect the core ideas of the paper work. The abstract is usually about 500 words. The abstract should cover the purpose and significance of this scientific work, research ideas and methods, research results and conclusions.
+Our framework, tailored for robotic systems, addresses communication network instability 
+by randomizing inputs like received communication messages. It targets software's 
+multi-process and multi-threaded nature by increasing data race probabilities via program 
+instrumentation delays. Additionally, to navigate the challenges posed by robots' weak states, 
+our framework utilizes black-box methods, such as traffic analysis, to infer internal states.
+The approach led to \textbf{the discovery of 20 ROS2 software vulnerabilities, with 11 
+confirmed and fixed by developers, including 4 recognized by the US's CVE and 7 awaiting 
+final review by China's CNVD.}
 
-Keywords are a set of words or terms selected from the text to reveal the subject content of the whole text for the user to find the literature, and the standardized words in the word list (refer to the corresponding technical terminology standards) should be used as much as possible. The keywords are usually 3 to 8, arranged according to the level of extensibility of the words. The keywords are separated by commas, and no punctuation marks are used after the last keyword.
+This work demonstrates the high practical value of our fuzz testing framework for 
+robotic systems, contributing significantly to the open-source community and 
+efficiently adaptable for testing various robot programs.
 
-\textbf{Keywords: Keywords 1, Keywords 2, Keywords 3, Keywords 5, Keywords 6}
+\textbf{Keywords: Fuzz, ROS2, Concurrent Vulnerability, Memory Vulnerability}
 \end{adjustwidth}
 \end{spacing}
 
@@ -311,7 +334,7 @@ Keywords are a set of words or terms selected from the text to reveal the subjec
 \subsection{背景介绍}
 \setParDis %设置段间距为 0
 %@author: lhy
-\include{subtexs/lhy_background}
+\input{subtexs/lhy_background}
 
 \subsection{研究现状}
 \setParDis %设置段间距为 0
@@ -340,12 +363,12 @@ Keywords are a set of words or terms selected from the text to reveal the subjec
 \subsubsection{ASan}
 \subsubsection{基于覆盖率的遗传算法}
 \subsubsection{ROS机制}
-\include{subtexs/ros_background.tex}
+\input{subtexs/ros_background.tex}
 %@author: yjw
 
 \subsection{关键设计}
 \setParDis %设置段间距为 0
-\include{subtexs/key_fuzz_design}
+\input{subtexs/key_fuzz_design}
 %@author: yjw
 
 \section{作品测试与成果分析}
