@@ -62,6 +62,40 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 
 %********************第三方字体引入********************
 
+%********************代码段设置********************
+% by yjw
+% \texttt 用于行内代码，等宽字体，不知道让不让用
+\usepackage{listings} % 用于代码排版
+\usepackage{xcolor} % 用于代码高亮
+
+% 定义代码块样式
+\lstdefinestyle{codeblock}{
+    backgroundcolor=\color{white},    % 背景颜色
+    basicstyle=\ttfamily\small,       % 设置字体样式
+    breakatwhitespace=false,          % 是否只在空白处自动断行
+    breaklines=true,                  % 自动断行
+    captionpos=b,                     % 标题位置
+    commentstyle=\color{green},       % 注释风格
+    frame=single,                     % 单框
+    keepspaces=true,                  % 保持空格
+    keywordstyle=\color{blue},        % 关键字风格
+    numbers=left,                     % 行号位置
+    numbersep=8pt,                    % 行号与代码的距离
+    numberstyle=\tiny\color{gray},    % 行号样式
+    rulecolor=\color{black},          % 框架颜色
+    showspaces=false,                 % 不显示空格
+    showstringspaces=false,           % 字符串中不显示空格
+    showtabs=false,                   % 不显示制表符
+    stepnumber=1,                     % 步长
+    stringstyle=\color{orange},       % 字符串风格
+    tabsize=2,                        % 制表符占用空格数
+    xleftmargin=\parindent,           % 左边距
+    framexleftmargin=12pt,             % 框架左边距，增加些许间距以包含行号
+}
+\lstset{style=codeblock}
+
+\usepackage{hyperref} %超链接支持
+%********************代码段设置********************
 
 %********************中文字号设置********************
 %\newcommand{\chuhao}{\fontsize{42pt}{\baselineskip}\selectfont}
@@ -90,7 +124,9 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 %请在每部分使用这个
 %********************段间距设置********************
 
-%********************
+%********************子文件导入区域****************
+% 用于仅编译部分导入文件
+% \includeonly{subtexs/ros_background, }
 
 \begin{document}
 %********************页眉页脚设置********************
@@ -268,11 +304,12 @@ Keywords are a set of words or terms selected from the text to reveal the subjec
 
 %%%%%%%%%%%%%%%%%%%%%% 一 作品概述
 \section{作品概述}
-\setParDis %设置段间距为 0
+  \setParDis %设置段间距为 0
 \begin{spacing}{1.5} % 行距1.5
 
 
 \subsection{背景介绍}
+\setParDis %设置段间距为 0
 %@author: lhy
 \begin{enumerate}
   \item ROS系统重要性
@@ -281,6 +318,7 @@ Keywords are a set of words or terms selected from the text to reveal the subjec
 \end{enumerate}
 
 \subsection{研究现状}
+\setParDis %设置段间距为 0
 \subsubsection{ROS常见测试方案}
 %@author: yjw
 普通单元测试， 代码分析工具
@@ -289,12 +327,15 @@ Keywords are a set of words or terms selected from the text to reveal the subjec
 强调：模糊测试目前很火，但是没有用到ros上
 
 \subsection{作品概述}
+\setParDis %设置段间距为 0
 %@author: yjw
 
 
 %%%%%%%%%%%%%%%%%%%%%% 二 作品设计与实现
 \section{作品设计与实现}
+\setParDis %设置段间距为 0
 \subsection{系统需求分析}
+\setParDis %设置段间距为 0
 %@author: wkt
 \begin{enumerate}
   \item 高覆盖率
@@ -304,6 +345,7 @@ Keywords are a set of words or terms selected from the text to reveal the subjec
 \end{enumerate}
 
 \subsection{技术背景与预备知识}
+\setParDis %设置段间距为 0
 %@author: jfb
 \subsubsection{模糊测试框架}
 \subsubsection{漏洞种类及危害}
@@ -311,28 +353,41 @@ Keywords are a set of words or terms selected from the text to reveal the subjec
 \subsubsection{ASan}
 \subsubsection{基于覆盖率的遗传算法}
 \subsubsection{ROS机制}
+\include{subtexs/ros_background.tex}
 %@author: yjw
 
 \subsection{关键设计}
+\setParDis %设置段间距为 0
+\include{subtexs/key_fuzz_design}
 %@author: yjw
 
 \section{作品测试与成果分析}
+\setParDis %设置段间距为 0
 %@author: wkt
 \subsection{测试环境介绍}
+\setParDis %设置段间距为 0
 \subsection{测试成果与漏洞统计}
+\setParDis %设置段间距为 0
 \subsection{ROS漏洞实例分析}
+\setParDis %设置段间距为 0
+% \include{subtexs/our_bugs}
 \subsection{实例分析}
+\setParDis %设置段间距为 0
 \subsection{与同类技术对比}
+\setParDis %设置段间距为 0
 
 \section{创新型说明与前景分析}
+\setParDis %设置段间距为 0
 %@author: jfb
 \subsection{创新性说明}
+\setParDis %设置段间距为 0
 \begin{enumerate}
   \item 创新地将模糊测试技术迁移
   \item 创新测试方法，高效性
 \end{enumerate}
 
 \subsection{前景分析}
+\setParDis %设置段间距为 0
 \begin{enumerate}
   \item 创新维度
   \item 团队维度
