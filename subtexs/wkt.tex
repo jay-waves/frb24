@@ -1,134 +1,91 @@
-\textbf{成就}
-
+\subsection{测试环境介绍}
 本作品在ROS2中测试了10个常见的机器人程序。根据最新版本的测试结果得到下列图表，表格1显示了这些用于测试的ROS程序的信息(源代码行数按CLOC计算{[}23{]})。为了执行机器人导航(用于移动和定位程序)和地图构建(用于移动和SLAM程序)任务，这些程序在机器人仿真框架Gazebo
 11.5{[}24{]}中的虚拟机器人TurtleBot3
 Waffle上执行。本测试使用的虚拟传感器包括激光雷达，里程计，2D相机和IMU(惯性测量单元)。实验运行在一台普通的x86-64台式机上，配有8个英特尔处理器和20GB物理内存。使用的操作系统为Ubuntu
 20.04, ROS2版本为ROS2 Foxy。
-
-
 \begin{table}[H]
-\small
-\caption{用于测试的ROS程序信息}
-\label{tb:ros_test}
-\centering
-\begin{tabular}{cccc}
-\hline  
-\textbf{类型} & \textbf{程序} & \textbf{描述} & \textbf{LOC} \\ 
-\hline  
-移动 & nav2\_bt\_navigator & ROS2导航中的BT导航模块 & 6.2K \\
-移动 & nav2\_planner & ROS2导航中的路径规划器模块 & 10.4K \\
-移动 & nav2\_recoveries & ROS2导航中的恢复模块 & 1.2K \\
-移动 & nav2\_controller & ROS2导航中的控制器模块 & 6.3K \\
-定位 & nav2\_amcl & ROS2导航中的定位模块 & 14.4K \\
-定位 & lama\_loc & 可选的定位和映射方法 & 9.5K \\
-定位 & ekf\_loc & 基于卡尔曼滤波的定位方法 & 0.8K \\
-SLAM & rtab-map & 实时RGB-D SLAM方法 & 26.1K \\
-SLAM & slam\_toolbox & 一套用于2D SLAM的工具和功能 & 15.1K \\
-SLAM & cartographer & 实时2D和3D SLAM方法 & 7.8K \\
-\hline
-\end{tabular} 
+	\small
+	\caption{用于测试的ROS程序信息}
+	\label{tb:ros_test}
+	\centering
+	\begin{tabular}{cccc}
+		\hline  
+		\textbf{类型} & \textbf{程序} & \textbf{描述} & \textbf{LOC} \\ 
+		\hline  
+		移动 & nav2\_bt\_navigator & ROS2导航中的BT导航模块 & 6.2K \\
+		移动 & nav2\_planner & ROS2导航中的路径规划器模块 & 10.4K \\
+		移动 & nav2\_recoveries & ROS2导航中的恢复模块 & 1.2K \\
+		移动 & nav2\_controller & ROS2导航中的控制器模块 & 6.3K \\
+		定位 & nav2\_amcl & ROS2导航中的定位模块 & 14.4K \\
+		定位 & lama\_loc & 可选的定位和映射方法 & 9.5K \\
+		定位 & ekf\_loc & 基于卡尔曼滤波的定位方法 & 0.8K \\
+		SLAM & rtab-map & 实时RGB-D SLAM方法 & 26.1K \\
+		SLAM & slam\_toolbox & 一套用于2D SLAM的工具和功能 & 15.1K \\
+		SLAM & cartographer & 实时2D和3D SLAM方法 & 7.8K \\
+		\hline
+	\end{tabular} 
 \end{table}
 
-
-运行时测试：
-
-本测试运行一个通用的第三方分析工具ASan{[}20{]}和ROZZ来检测运行时的内存bug。每个程序都用相关的机器人任务进行24小时的测试。表格2显示了测试结果。
-
-表格 2 机器人程序在ROS2模糊测试结果
+\subsection{测试成果与漏洞统计}
+本测试运行一个通用的第三方分析工具ASan{[}20{]}和本作品来检测运行时的内存bug。每个程序都用相关的机器人任务进行24小时的测试。表格2显示了测试结果。
 
 \begin{table}[H]
-\small
-\caption{程序分析统计}
-\centering
-\begin{tabular}{ccccc}
-\hline
-\textbf{程序} & \multicolumn{2}{c}{\textbf{覆盖分支}} & \multicolumn{2}{c}{\textbf{漏洞检测}} \\
-\cline{2-5}
-& \textbf{模糊测试} & \textbf{测试样例} & \textbf{发现的漏洞} & \textbf{确认的漏洞} \\
-\hline
-nav2\_bt\_navigator & 24.3K & 17.2K & 3 & 2 \\
-nav2\_planner & 27.9K & 25.9K & 6 & 5 \\
-nav2\_recoveries & 15.8K & 16.4K & 2 & 2 \\
-nav2\_controller & 37.6K & 25.1K & 3 & 1 \\
-nav2\_amcl & 12.2K & 12.0K & 9 & 7 \\
-lama\_loc & 25.3K & 20.7K & 3 & 0 \\
-ekf\_loc & 16.2K & 5.2K & 1 & 0 \\
-rtab-map & 70.9K & 59.3K & 8 & 1 \\
-slam\_toolbox & 30.9K & 10.7K & 3 & 2 \\
-cartographer & 59.9K & 52.1K & 5 & 0 \\
-\textbf{总计} & \textbf{320.9K} & \textbf{244.5K} & \textbf{43} & \textbf{20} \\
-\hline
-\end{tabular}
+	\small
+	\caption{机器人程序在ROS2模糊测试结果}
+	\centering
+	\begin{tabular}{ccccc}
+		\hline
+		\textbf{程序} & \multicolumn{2}{c}{\textbf{覆盖分支}} & \multicolumn{2}{c}{\textbf{漏洞检测}} \\
+		\cline{2-5}
+		& \textbf{模糊测试} & \textbf{测试样例} & \textbf{发现的漏洞} & \textbf{确认的漏洞} \\
+		\hline
+		nav2\_bt\_navigator & 24.3K & 17.2K & 3 & 2 \\
+		nav2\_planner & 27.9K & 25.9K & 6 & 5 \\
+		nav2\_recoveries & 15.8K & 16.4K & 2 & 2 \\
+		nav2\_controller & 37.6K & 25.1K & 3 & 1 \\
+		nav2\_amcl & 12.2K & 12.0K & 9 & 7 \\
+		lama\_loc & 25.3K & 20.7K & 3 & 0 \\
+		ekf\_loc & 16.2K & 5.2K & 1 & 0 \\
+		rtab-map & 70.9K & 59.3K & 8 & 1 \\
+		slam\_toolbox & 30.9K & 10.7K & 3 & 2 \\
+		cartographer & 59.9K & 52.1K & 5 & 0 \\
+		\textbf{总计} & \textbf{320.9K} & \textbf{244.5K} & \textbf{43} & \textbf{20} \\
+		\hline
+	\end{tabular}
 \end{table}
 
+\textbf{测试覆盖率。}为了理解本作品的测试覆盖改进，本测试还对每个ROS程序运行了24小时的官方测试用例，并收集了覆盖的代码分支的数量。得益于本作品基于ROS属性的模糊测试方法，与运行测试样例相比，本作品覆盖了测试程序中31\%的代码分支。值得一提的是，在运行官方测试用例时，本作品没有发现任何错误。
 
-\textbf{测试覆盖率。}为了理解ROZZ的测试覆盖改进，本测试还对每个ROS程序运行了24小时的官方测试用例，并收集了覆盖的代码分支的数量。得益于本作品基于ROS属性的模糊测试方法，与运行测试样例相比，ROZZ覆盖了测试程序中31\%的代码分支。值得一提的是，在运行官方测试用例时，本作品没有发现任何错误。
-
-\textbf{漏洞检测。}ROZZ在测试程序中发现了43个真实的漏洞，没有误报。这些漏洞实际上可以使用ROZZ及其生成的测试用例来重现。本团队已经向相关ROS开发者报告了这些漏洞，其中20个漏洞已经得到了确认和修复，仍在等待对剩余漏洞的反馈。值得注意的是，有五个测试程序的名称包含``nav2''，它们是由ROS社区开发和维护的且广泛用于基于ROS的机器人。因此，这5个程序中已确认的17个bug受到了ROS开发者的高度关注。
-
-\textbf{Bugs类型及危害}
-
-本团队还根据发现的43个漏洞的类型进行了分类，并将结果总结在表III中。具体来说，有6个空指针解引用，5个释放后使用错误，3个缓冲区/堆栈溢出错误，11个无效指针访问和18个未捕获异常，如表格3所示。一旦这些错误被特定的输入触发，运行时故障和严重的安全问题就会在运行时发生。具体来说，空指针解引用和未捕获的异常可能导致程序崩溃，从而异常中止机器人任务;缓冲区/堆栈溢出错误、use-after-free错误和无效指针访问会导致机器人的未定义行为，并增加机器人受到恶意攻击的风险。下面将对不同种类的漏洞进行简要介绍其特点及危害。
-
-表格 3 发现漏洞的种类
-
+\textbf{漏洞检测。}本作品在测试程序中发现了43个真实的漏洞，没有误报。这些漏洞实际上可以使用本作品及其生成的测试用例来重现。本团队已经向相关ROS开发者报告了这些漏洞，其中20个漏洞已经得到了确认和修复，仍在等待对剩余漏洞的反馈。值得注意的是，有五个测试程序的名称包含``nav2''，它们是由ROS社区开发和维护的且广泛用于基于ROS的机器人。因此，这5个程序中已确认的17个bug受到了ROS开发者的高度关注。
+\subsection{ROS漏洞实例分析}
+本团队还根据发现的43个漏洞的类型进行了分类，并将结果总结在表3中。具体来说，有6个空指针解引用，5个释放后使用错误，3个缓冲区/堆栈溢出错误，11个无效指针访问和18个未捕获异常，如表格3所示。一旦这些错误被特定的输入触发，运行时故障和严重的安全问题就会在运行时发生。具体来说，空指针解引用和未捕获的异常可能导致程序崩溃，从而异常中止机器人任务;缓冲区/堆栈溢出错误、释放后使用错误和无效指针访问会导致机器人的未定义行为，并增加机器人受到恶意攻击的风险。下面将对不同种类的漏洞进行简要介绍其特点及危害。
 \begin{table}[H]
-\small
-\caption{漏洞检测统计}
-\centering
-\begin{tabular}{ccccccc}
-\hline
-\textbf{程序} & \textbf{空指针} & \textbf{释放后使用} & \textbf{溢出} & \textbf{无效指针} & \textbf{异常} & \textbf{总计} \\
-\hline
-nav2\_bt\_navigator & 1 & 0 & 0 & 0 & 2 & 3 \\
-nav2\_planner & 0 & 2 & 1 & 2 & 1 & 6 \\
-nav2\_recoveries & 0 & 2 & 0 & 0 & 0 & 2 \\
-nav2\_controller & 0 & 0 & 1 & 1 & 1 & 3 \\
-nav2\_amcl & 2 & 0 & 0 & 6 & 1 & 9 \\
-lama\_loc & 2 & 0 & 0 & 0 & 1 & 3 \\
-ekf\_loc & 0 & 0 & 0 & 0 & 1 & 1 \\
-rtab-map & 0 & 0 & 1 & 1 & 6 & 8 \\
-slam\_toolbox & 1 & 1 & 0 & 1 & 0 & 3 \\
-cartographer & 0 & 0 & 0 & 0 & 5 & 5 \\
-\textbf{总计} & \textbf{6} & \textbf{5} & \textbf{3} & \textbf{11} & \textbf{18} & \textbf{43} \\
-\hline
-\end{tabular}
+	\small
+	\caption{发现漏洞的种类}
+	\centering
+	\begin{tabular}{ccccccc}
+		\hline
+		\textbf{程序} & \textbf{空指针} & \textbf{释放后使用} & \textbf{溢出} & \textbf{无效指针} & \textbf{异常} & \textbf{总计} \\
+		\hline
+		nav2\_bt\_navigator & 1 & 0 & 0 & 0 & 2 & 3 \\
+		nav2\_planner & 0 & 2 & 1 & 2 & 1 & 6 \\
+		nav2\_recoveries & 0 & 2 & 0 & 0 & 0 & 2 \\
+		nav2\_controller & 0 & 0 & 1 & 1 & 1 & 3 \\
+		nav2\_amcl & 2 & 0 & 0 & 6 & 1 & 9 \\
+		lama\_loc & 2 & 0 & 0 & 0 & 1 & 3 \\
+		ekf\_loc & 0 & 0 & 0 & 0 & 1 & 1 \\
+		rtab-map & 0 & 0 & 1 & 1 & 6 & 8 \\
+		slam\_toolbox & 1 & 1 & 0 & 1 & 0 & 3 \\
+		cartographer & 0 & 0 & 0 & 0 & 5 & 5 \\
+		\textbf{总计} & \textbf{6} & \textbf{5} & \textbf{3} & \textbf{11} & \textbf{18} & \textbf{43} \\
+		\hline
+	\end{tabular}
 \end{table}
 
+本测试检测到的5个释放后使用漏洞是由数据竞争引起的。具体来说，一个内存对象在一个线程中被释放，但这个对象仍然在另一个线程中使用，没有同步。由于并发执行的不确定性，在正常执行中很难发现这些漏洞。一个真实含有释放后使用漏洞的代码如图表1所示
 
-\textbf{释放后使用(UAF)}：
-
-释放后使用问题发生在程序试图使用已释放的内存时。通常，内存释放后，操作系统会将该内存标记为可重新使用，但并不会立即清空其内容。如果程序在内存释放后继续访问该内存，就可能导致安全漏洞。该漏洞的图1如图。
-
-攻击者可能利用释放后使用漏洞来执行未经授权的代码，例如通过释放内存但保留对其的引用，然后在后续代码中使用该引用，从而导致恶意代码执行。同时可能导致程序崩溃或不稳定，因为操作已释放的内存区域可能导致未定义的行为。
-
-Heartbleed漏洞是一个广为人知的释放后使用漏洞的例子。该漏洞影响了OpenSSL库中的Heartbeat扩展，攻击者可以发送恶意的Heartbeat请求，从而导致服务器上的内存泄漏和可能的敏感信息泄露。
-
-本测试检测到的5个释放后使用漏洞是由数据竞争引起的。具体来说，一个内存对象在一个线程中被释放，但这个对象仍然在另一个线程中使用，没有同步。由于并发执行的不确定性，在正常执行中很难发现这些漏洞。一个真实含有释放后使用漏洞的代码如图表1所示。
-
-
-\textbf{异常(Exception)：}
-
-异常是一种用于处理错误或不正常情况的机制。在程序执行期间，如果发生异常，通常会中断当前执行流程，并转移到异常处理代码。如果程序未正确处理异常，可能会导致安全漏洞。
-
-异常可能导致程序跳转到未经测试的代码路径，使得程序执行流程不可预测，从而导致意外行为或安全漏洞。同时，异常通常包含程序执行的上下文信息，攻击者可能利用这些信息来进一步渗透系统，进而导致信息泄露。
-
-在2014年的``Shellshock''漏洞中，攻击者利用了Unix/Linux系统中的一个bash
-shell的异常处理漏洞。通过在HTTP请求的User-Agent头中注入恶意代码，攻击者能够利用bash的异常处理漏洞来执行任意命令，从而导致系统被入侵。
-
-本测试检测到的这18个未捕获的异常中，有8个错误是由被测程序代码中的内部异常引起的，10个错误是由被测ROS程序使用的第三方软件库和ROS核心组件的API调用的外部异常(在c++中属于``运行时错误''类型)引起的。这个特性表明应该在ROS程序中小心地捕获和处理内部和外部异常。例如，在nav2bt导航器、nav2规划器、nav2控制器和nav2amcl中，没有捕捉到来自ROS
+本测试检测到的这18个未捕获的异常中，有8个错误是由被测程序代码中的内部异常引起的，10个错误是由被测ROS程序使用的第三方软件库和ROS核心组件的API调用的外部异常(在c++中属于``运行时错误''类型)引起的。这个特性表明应该在ROS程序中小心地捕获和处理内部和外部异常。例如，在nav2\_bt\_navigator、nav2\_planner、nav2\_controller和nav2\_amcl中，没有捕捉到来自ROS
 rclcpp组件的关于负时间间隔的四个外部异常，这可能导致程序崩溃。真实的代码案例如下图表2所示：
-
-
-\textbf{缓冲区溢出(Buffer overflow):}
-
-缓冲区溢出发生在程序试图向一个缓冲区写入超过其分配大小的数据时。这导致数据溢出到相邻的内存区域，覆盖了那些数据或程序代码。通常，这种溢出可以修改程序的执行流程，因为溢出数据可能包含特定的指令地址，攻击者可以利用这一点来控制程序的行为。该漏洞的图示如图。
-
-攻击者可能利用缓冲区溢出漏洞来执行恶意代码，例如注入Shellcode并强制程序跳转到Shellcode的地址，从而获得系统权限。同时，也可能泄露敏感信息，例如通过溢出将重要的内存区域覆盖为攻击者所控制的数据，从而导致信息泄露。除此之外，因为缓冲区溢出可能导致程序崩溃或无法正常执行，使其无法提供正常的服务。
-
-著名的``Code Red''蠕虫利用了Microsoft
-IIS服务器上的缓冲区溢出漏洞。攻击者通过发送特制的HTTP请求，导致IIS的缓冲区溢出，并在受感染的系统上运行恶意代码。这导致系统被感染并且在网络上传播蠕虫。
-
 
 在ROS程序初始化过程中出现了11个bug。这些错误中有6个是由于初始化过程中对无效用户数据和不正确参数配置的错误处理引起的;还有5个漏洞是由初始化过程和消息处理之间缺少同步引起的。因此，在测试ROS程序时，应该特别注意初始化过程。
 
@@ -141,61 +98,53 @@ IIS服务器上的缓冲区溢出漏洞。攻击者通过发送特制的HTTP请�
 2个漏洞是由堆栈内存问题引起的。其中一个漏洞是由在新线程中使用局部变量引起的，另一个漏洞是由过多的递归调用引起的。图6(c)显示了rtab-map中的一个示例错误。在CoreWrapper类的构造函数中，主线程的第141行定义了一个局部变量tfDelay，但是这个变量是在一个通过new
 std::thread创建的新线程中的第590行被访问的。由于新线程无法访问主线程的堆栈，因此会出现堆栈溢出错误{[}37{]}。
 
-\textbf{同类技术对比}
+\subsection{与同类技术对比}
+本测试通过实验将本作品与两种最先进的机器人程序测试方法Ros2-fuzz{[}10{]}和ASTAA{[}38{]}进行了比较。ROS2
+-fuzz是一种基于AFL{[}2{]}的自动化模糊测试方法，用于在ROS2中测试机器人程序。这种方法会对给定ROS节点中特定主题的消息进行变异。由于Ros2-fuzz是开源的，我们从源代码构建它。ASTAA是一种针对机器人程序鲁棒性测试的方法。它在ROS节点之间随机改变消息，并且还可以在运行时丢弃一些消息以模拟通信不稳定。由于ASTAA是闭源的，本团队通过修改本作品实现了一个类似ASTAA的工具，只允许传感器消息的数据突变和随机丢弃消息，而不使用程序反馈。
 
-本测试通过实验将ROZZ与两种最先进的机器人程序测试方法Ros2-fuzz{[}10{]}和ASTAA{[}38{]}进行了比较。ROS2
--fuzz是一种基于AFL{[}2{]}的自动化模糊测试方法，用于在ROS2中测试机器人程序。这种方法会对给定ROS节点中特定主题的消息进行变异。由于Ros2-fuzz是开源的，我们从源代码构建它。ASTAA是一种针对机器人程序鲁棒性测试的方法。它在ROS节点之间随机改变消息，并且还可以在运行时丢弃一些消息以模拟通信不稳定。由于ASTAA是闭源的，本团队通过修改ROZZ实现了一个类似ASTAA的工具，只允许传感器消息的数据突变和随机丢弃消息，而不使用程序反馈。
-
-在实验中，我们在表1中选择了5个名称包含``nav2''的程序，并运行Ros2-fuzz、ASTAAlike工具和ROZZ对这些程序进行了24小时的机器人导航任务测试。表4显示了比较结果，其中包括覆盖的代码分支和发现的漏洞。
-
-表格 4 比较结果
-
+在实验中，我们在表1中选择了5个名称包含``nav2''的程序，并运行Ros2-fuzz、ASTAAlike工具和本作品对这些程序进行了24小时的机器人导航任务测试。表4显示了比较结果，其中包括覆盖的代码分支和发现的漏洞。
 \begin{table}[H]
-\small
-\caption{不同测试方法的漏洞检测结果}
-\centering
-\begin{tabular}{ccccccc}
-\hline
-\multirow{2}{*}{\textbf{程序}} & \multicolumn{2}{c}{\textbf{Ros2-fuzz}} & \multicolumn{2}{c}{\textbf{ASTAA-like}} & \multicolumn{2}{c}{\textbf{ROZZ}} \\
-\cline{2-7}
-& \textbf{分支} & \textbf{发现漏洞数} & \textbf{分支} & \textbf{发现漏洞数} & \textbf{分支} & \textbf{发现漏洞数} \\
-\hline
-nav2\_bt\_navigator & 1.8K & 0 & 23.7K & 1 & 24.3K & 3 \\
-nav2\_planner & 1.6K & 0 & 26.4K & 2 & 27.9K & 6 \\
-nav2\_recoveries & 4.8K & 0 & 15.1K & 1 & 15.8K & 2 \\
-nav2\_controller & 3.1K & 0 & 35.2K & 3 & 37.6K & 3 \\
-nav2\_amcl & 0.7K & 0 & 11.9K & 2 & 12.2K & 9 \\
-\textbf{总计} & \textbf{12.0K} & \textbf{0} & \textbf{112.3K} & \textbf{9} & \textbf{117.8K} & \textbf{23} \\
-\hline
-\end{tabular}
+	\small
+	\caption{不同测试方法的漏洞检测结果}
+	\centering
+	\begin{tabular}{ccccccc}
+		\hline
+		\multirow{2}{*}{\textbf{程序}} & \multicolumn{2}{c}{\textbf{Ros2-fuzz}} & \multicolumn{2}{c}{\textbf{ASTAA-like}} & \multicolumn{2}{c}{\textbf{本作品}} \\
+		\cline{2-7}
+		& \textbf{分支} & \textbf{发现漏洞数} & \textbf{分支} & \textbf{发现漏洞数} & \textbf{分支} & \textbf{发现漏洞数} \\
+		\hline
+		nav2\_bt\_navigator & 1.8K & 0 & 23.7K & 1 & 24.3K & 3 \\
+		nav2\_planner & 1.6K & 0 & 26.4K & 2 & 27.9K & 6 \\
+		nav2\_recoveries & 4.8K & 0 & 15.1K & 1 & 15.8K & 2 \\
+		nav2\_controller & 3.1K & 0 & 35.2K & 3 & 37.6K & 3 \\
+		nav2\_amcl & 0.7K & 0 & 11.9K & 2 & 12.2K & 9 \\
+		\textbf{总计} & \textbf{12.0K} & \textbf{0} & \textbf{112.3K} & \textbf{9} & \textbf{117.8K} & \textbf{23} \\
+		\hline
+	\end{tabular}
 \end{table}
+本作品发现了Ros2-fuzz和ASTAA-like的工具发现的所有9个漏洞，并且它还发现了这些方法遗漏的14个漏洞，且具有更高的代码覆盖率。实际上，Ros2-fuzz和ASTAA仅生成关于ROS节点之间消息的测试用例，因此在模糊测试期间没有涉及处理不同用户数据和配置参数的大量代码。相比之下，本作品从多个维度(包括用户数据、配置参数和传感器消息)生成测试用例，因此本作品覆盖了Ros2-fuzz和ASTAA遗漏的更多代码。此外，本作品使用分布式分支覆盖更有效地指导多个ROS节点的测试用例生成，并使用三种常见模式执行时间突变(ASTAA只考虑其中一种模式，即消息丢弃)，以更有效地覆盖有关时间特征的代码。由于这些原因，在实验中，本作品比Ros2-fuzz和类ASTAA-like的工具产生更好的结果。
 
-ROZZ发现了Ros2-fuzz和ASTAA-like的工具发现的所有9个漏洞，并且它还发现了这些方法遗漏的14个漏洞，且具有更高的代码覆盖率。实际上，Ros2-fuzz和ASTAA仅生成关于ROS节点之间消息的测试用例，因此在模糊测试期间没有涉及处理不同用户数据和配置参数的大量代码。相比之下，ROZZ从多个维度(包括用户数据、配置参数和传感器消息)生成测试用例，因此ROZZ覆盖了Ros2-fuzz和ASTAA遗漏的更多代码。此外，ROZZ使用分布式分支覆盖更有效地指导多个ROS节点的测试用例生成，并使用三种常见模式执行时间突变(ASTAA只考虑其中一种模式，即消息丢弃)，以更有效地覆盖有关时间特征的代码。由于这些原因，在实验中，ROZZ比Ros2-fuzz和类ASTAA-like的工具产生更好的结果。
+通过分析被覆盖分支随着测试时间的增长，观察到随着时间的推移，这三种工具覆盖的新代码分支越来越少。这是因为许多代码分支已经被模糊测试期间由早期突变生成的测试用例所覆盖。即便如此，本团队观察到在后面的测试中，由于本项目的多维生成方法、分布式分支覆盖和时间突变策略，本作品覆盖了更多的新代码分支。
 
-通过分析被覆盖分支随着测试时间的增长，观察到随着时间的推移，这三种工具覆盖的新代码分支越来越少。这是因为许多代码分支已经被模糊测试期间由早期突变生成的测试用例所覆盖。即便如此，本团队观察到在后面的测试中，由于本项目的多维生成方法、分布式分支覆盖和时间突变策略，ROZZ覆盖了更多的新代码分支。
-
-ROZZ也适用于在ROS1中测试机器人程序。因此，本团队使用ROZZ和ASan来测试了ROS1中三个常见的机器人程序，包括move\_base
+本作品也适用于在ROS1中测试机器人程序。因此，本团队使用本作品和ASan来测试了ROS1中三个常见的机器人程序，包括move\_base
 {[}39{]}， nav1\_
-amcl{[}40{]}和hector\_mapping{[}41{]}。对于机器人导航任务，本团队运行move\_base和nav1\_amcl，然后运行move\_base和hector\_mapping来完成地图建立任务。本团队对每个程序及其相关任务测试24小时。与第IV-A节类似，同时还运行每个程序的官方测试样例24小时，以验证ROZZ的测试覆盖改进。表5显示了测试结果。
-
-表格 5 ROS1中机器人程序测试结果
-
+amcl{[}40{]}和hector\_mapping{[}41{]}。对于机器人导航任务，本团队运行move\_base和nav1\_amcl，然后运行move\_base和hector\_mapping来完成地图建立任务。本团队对每个程序及其相关任务测试24小时。与第IV-A节类似，同时还运行每个程序的官方测试样例24小时，以验证本作品的测试覆盖改进。表5显示了测试结果。
 \begin{table}[H]
-\small
-\caption{测试覆盖与漏洞发现概览}
-\centering
-\begin{tabular}{cccccc}
-\hline
-\multirow{2}{*}{\textbf{程序}} & \multicolumn{2}{c}{\textbf{覆盖分支}} & \multicolumn{3}{c}{\textbf{发现的漏洞}} \\
-\cline{2-6}
-& \textbf{模糊测试} & \textbf{测试套件} & \textbf{无效指针} & \textbf{异常} & \textbf{总计} \\
-\hline
-move\_base & 36.4K & 31.9K & 0 & 2 & 2 \\
-navl\_amcl & 12.5K & 10.9K & 2 & 2 & 4 \\
-hector\_mapping & 13.1K & 11.5K & 0 & 0 & 0 \\
-\textbf{总计} & \textbf{62.0K} & \textbf{54.3K} & \textbf{2} & \textbf{4} & \textbf{6} \\
-\hline
-\end{tabular}
+	\small
+	\caption{ROS1中机器人程序测试结果}
+	\centering
+	\begin{tabular}{cccccc}
+		\hline
+		\multirow{2}{*}{\textbf{程序}} & \multicolumn{2}{c}{\textbf{覆盖分支}} & \multicolumn{3}{c}{\textbf{发现的漏洞}} \\
+		\cline{2-6}
+		& \textbf{模糊测试} & \textbf{测试套件} & \textbf{无效指针} & \textbf{异常} & \textbf{总计} \\
+		\hline
+		move\_base & 36.4K & 31.9K & 0 & 2 & 2 \\
+		navl\_amcl & 12.5K & 10.9K & 2 & 2 & 4 \\
+		hector\_mapping & 13.1K & 11.5K & 0 & 0 & 0 \\
+		\textbf{总计} & \textbf{62.0K} & \textbf{54.3K} & \textbf{2} & \textbf{4} & \textbf{6} \\
+		\hline
+	\end{tabular}
 \end{table}
 
-与运行测试样例相比，ROZZ在测试程序中覆盖了14\%的代码分支，这得益于我们基于ROS属性的模糊测试方法。值得注意的是，在运行官方测试样例时，我们没有发现任何错误。由于测试覆盖率的提高，ROZZ发现了6个真正的错误，没有误报，包括2个无效指针访问和4个未捕获的异常。本团队已经向相关ROS开发人员报告了这些报告，但尚未收到任何回应。实际上，这三个测试程序的github存储库已经很长时间没有更新了。
+与运行测试样例相比，本作品在测试程序中覆盖了14\%的代码分支，这得益于我们基于ROS属性的模糊测试方法。值得注意的是，在运行官方测试样例时，我们没有发现任何错误。由于测试覆盖率的提高，本作品发现了6个真正的错误，没有误报，包括2个无效指针访问和4个未捕获的异常。本团队已经向相关ROS开发人员报告了这些报告，但尚未收到任何回应。实际上，这三个测试程序的github存储库已经很长时间没有更新了。
