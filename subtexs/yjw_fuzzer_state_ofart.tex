@@ -1,26 +1,26 @@
 %TODO: 审核，文献，表格格式
-近期有几种方法 $^{[2, 6, 7, 8, 9, 10]}$应用模糊测试于ROS（机器人操作系统）程序。它们自动生成ROS程序的输入，并借助第三方或定制的清洁程序检测内存或语义错误。表1展示了这些方法（包括本文中的我们的框架ROFER）之间的比较。如表\ref{tab:fuzzers}所示，这些方法在测试ROS程序时有三个主要限制：
+近期有几种$^{[2, 6, 7, 8, 9, 10]}$应用于ROS2程序的新型测试方法，它们不同于由开发者手动构造测试样例的单元测试，而尝试自动生成ROS程序输入，并借助清洁工具（Sanitizer）自动监控程序内存或语义错误。它们大幅提高了针对机器人系统的测试效率，表\ref{tab:fuzzers}将这些方法进行了比较（包括本作品），可以看出这些方法在测试ROS程序时仍存在三个主要限制：
 
-L1：测试用例生成效率低。除了ROZZ外，其余五种方法从单一维度（即用户命令或传感器信息）生成输入，其中三种方法缺乏时间输入变异的支持（即改变输入项的时间顺序）。为了提高测试覆盖率，ROZZ随机选择变异维度进行输入生成，并支持时间输入变异。然而，随机选择是盲目且低效的，无法识别出对提高覆盖率有前景的变异维度，导致许多生成的输入无助于增加测试覆盖率。
+\textbf{限制一：}测试用例生成效率低。大部分测试方法从单一维度（即用户命令或传感器信息）生成输入，并且生成的测试样例随机性过强，无法识别出可能高效探索程序边界的变异维度，导致许多生成的输入无助于增加测试覆盖率。
 
-L2：程序反馈效果不佳。SMACH-Fuzz和ASTAA随机生成输入，而没有程序反馈的指导。Ros2-fuzz和ROZZ使用代码覆盖率作为程序反馈，但代码覆盖率对多进程运行情况不敏感，且对不同执行顺序视而不见。为了解决这个问题，Phys-Fuzz和RoboFuzz使用特殊场景指标作为程序反馈，取代代码覆盖率。具体来说，Phys-Fuzz使用危险性评分量化机器人接近危险碰撞的程度；RoboFuzz使用语义反馈量化机器人执行上下文的错误性。然而，危险性评分仅适用于可能导致机器人碰撞的ROS程序；语义反馈要求用户编写每个测试程序的领域特定规格。此外，除了SMACH-Fuzz和RoboFuzz外，其他四种方法忽视了机器人任务的状态机，限制了它们在ROS程序中检测错误的有效性。为了解决这个问题，SMACH-Fuzz和RoboFuzz要求用户手动指定可能危险的状态和机器人任务的语义规则，但这种方式需要特定于被测试程序的大量知识。
+\textbf{限制二：}程序反馈效果不佳。SMACH-Fuzz和ASTAA随机生成输入，而没有反馈和指导；Ros2-fuzz和ROZZ参考AFL工具$^{[11]}$使用代码覆盖率作为程序反馈，但代码覆盖率对多进程运行情况不敏感，且忽略了不同执行路径；Phys-Fuzz使用场景危险程度评分来指导进一步生成场景，对于检测ROS2自动导航程序的避障能力效果较好，但也仅限制在了此场景下；RoboFuzz使用语义反馈来量化机器人执行上下文的正确性，但是这种特殊语义的设计编写需要很强专业知识。
 
-L3：通用性和自动化水平低。Ros2-fuzz和ROZZ只能测试C++程序，因为它们需要基于LLVM的代码检测来收集代码覆盖率作为程序反馈。其它四种方法可以测试不同语言的程序，因为它们没有程序反馈（SMACH-Fuzz和ASTAA）或使用其他类型的程序反馈代替代码覆盖率（Phys-Fuzz和RoboFuzz）。然而，对于每个测试的ROS程序，这四种方法都需要大量领域特定知识和手动努力来配置输入生成规则（ASTAA和RoboFuzz），编写有关机器人行为的规格（SMACH-Fuzz和RoboFuzz），检查执行日志（SMACH-Fuzz和Phy-Fuzz）等。
+\textbf{限制三：}自动化水平低。大部分方法都需要大量领域特定知识和手动努力来配置输入生成规则（ASTAA和RoboFuzz），编写有关机器人行为的规格（SMACH-Fuzz和RoboFuzz），检查执行日志（SMACH-Fuzz和Phy-Fuzz）等，这导致测试效率和便捷程度对比传统单元测试并没有很大提高。
 
-\begin{table*}[t]
+\begin{table}[H]
 \small
 \centering
-\caption{最新针对ROS系统的Fuzz技术对比}
+\caption{最新针对ROS系统的测试技术对比}
 \begin{tabular}{lccccc}
 \hline
-\textbf{技术名} & \textbf{输入维度}  & \textbf{反馈}& \textbf{自动化程度} & \textbf{漏洞类型} \\ \hline\hline
-SMACH-Fuzz [6] & Single & None& 差 & Behavior error \\ \hline
-Phys-Fuzz [7] & Single  & Hazardousness score  & 差& Robot collision \\ \hline
-Ros2-fuzz [10] & Single  & Code coverage   & 较好 & Memory bug \\ \hline
-ASTAA [8] & Single & None  & 差 & Robustness bug \\ \hline
-RoboFuzz [9] & Single  & Semantic feedback & Weak & Correctness bug \\ \hline
-ROZZ [2] & Multiple (random) & Code coverage & 较好 & Memory bug \\ \hline
-本作品 & Multiple (random)  & Code coverage+Traffic analysis & 较好& Memory/Concurrent bug \\ \hline
+\textbf{技术名} & \textbf{输入维度}  & \textbf{反馈}& \textbf{自动化程度} & \textbf{漏洞类型} \\ \hline
+SMACH-Fuzz $^{[6]}$ & 单一 & 无 & 差 & 行为错误 \\ 
+Phys-Fuzz $^{[7]}$ & 单一  & 环境危险程度  & 差& 碰撞损坏 \\ 
+Ros2-fuzz $^{[10]}$ & 单一  & 代码覆盖率   & 较好 & 内存漏洞 \\ 
+ASTAA $^{[8]}$ & 单一 & 无 & 差 & 行为错误 \\ 
+RoboFuzz $^{[9]}$ & 单一  & 语义反馈 & 较差 & 行为错误 \\ 
+ROZZ $^{[2]}$ & 多维度 & 代码覆盖率 & 较好 & 内存漏洞 \\ 
+本作品 & 多维度  & 代码覆盖率+流量分析 & 较好& 内存与并发漏洞 \\ \hline
 \end{tabular}
 \label{tab:fuzzers}
-\end{table*}
+\end{table}
