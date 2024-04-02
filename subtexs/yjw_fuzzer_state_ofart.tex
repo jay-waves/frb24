@@ -13,13 +13,14 @@ L3：通用性和自动化水平低。Ros2-fuzz和ROZZ只能测试C++程序，�
 \caption{最新针对ROS系统的Fuzz技术对比}
 \begin{tabular}{lccccc}
 \hline
-\textbf{技术名} & \textbf{输入维度} & \textbf{Temporal Mutation} & \textbf{反馈}& \textbf{自动化程度} & \textbf{漏洞类型} \\ \hline\hline
-SMACH-Fuzz [6] & Single & None & None& Weak & Behavior error \\ \hline
-Phys-Fuzz [7] & Single & None & Hazardousness score  & Weak & Robot collision \\ \hline
-Ros2-fuzz [10] & Single & None & Code coverage   & Good & Memory bug \\ \hline
-ASTAA [8] & Single & Support & None  & Weak & Robustness bug \\ \hline
-RoboFuzz [9] & Single & Support & Semantic feedback & Weak & Correctness bug \\ \hline
-ROZZ [2] & Multiple (random) & Support & Code coverage & Good & Memory bug \\ \hline
+\textbf{技术名} & \textbf{输入维度}  & \textbf{反馈}& \textbf{自动化程度} & \textbf{漏洞类型} \\ \hline\hline
+SMACH-Fuzz [6] & Single & None& 差 & Behavior error \\ \hline
+Phys-Fuzz [7] & Single  & Hazardousness score  & 差& Robot collision \\ \hline
+Ros2-fuzz [10] & Single  & Code coverage   & 较好 & Memory bug \\ \hline
+ASTAA [8] & Single & None  & 差 & Robustness bug \\ \hline
+RoboFuzz [9] & Single  & Semantic feedback & Weak & Correctness bug \\ \hline
+ROZZ [2] & Multiple (random) & Code coverage & 较好 & Memory bug \\ \hline
+本作品 & Multiple (random)  & Code coverage+Traffic analysis & 较好& Memory/Concurrent bug \\ \hline
 \end{tabular}
 \label{tab:fuzzers}
 \end{table*}
