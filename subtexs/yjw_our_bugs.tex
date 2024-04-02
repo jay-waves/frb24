@@ -1,5 +1,5 @@
 下面挑选我们的漏洞测试系统在ROS相关项目中检测出的几个典型漏洞进行分析，它们充分体现了本系统的价值。
-在\href{https://github.com/ros-planning/navigation2/issues/4177}{Navigation2 Issue\#4177}中，
+在Navigation2 Issue\#4177中，
 我们指出了一个典型的数组越界漏洞。
 
 Navigation2 系统中的节点会监听 \texttt{\textbackslash costmap}，来更新代价地图信息，
@@ -54,11 +54,9 @@ void CostmapSubscriber::toCostmap2D()
 }
 \end{lstlisting}
 
-在Naviagtion2\href{https://github.com/ros-planning/navigation2/pull/3958}{PR\#3972}, 
-\href{https://github.com/ros-planning/navigation2/pull/3958}{PR\#3958}, 
-\href{https://github.com/ros-planning/navigation2/issues/3940}{Issue\#3940}中, 
-我们报告了一个典型的并发bug，本系统通过插桩延迟技术，找到了Navigation2项目中Costmap结构
-数据竞争的根本原因，删除了之前大量不必要的检查。
+在Naviagtion2PR\#3972, PR\#3958, Issue\#3940$^{[13]}$中,我们报告了一个典型的并发
+bug，本系统通过插桩延迟技术，找到了Navigation2项目中Costmap结构数据竞争的根本原
+因，删除了之前大量不必要的检查。
 
 此bug发生在关闭期间，ROS系统使用Lifecycle状态机机制来管理节点生命周
 期，Controller、Planner、 CostmapROS都是具有生命周期的节点，CostmapROS是
@@ -66,9 +64,9 @@ Controller和Planner的子节点（独立线程）。当ROS2系统关闭时，Li
 一关闭信号，这三种节点都会直接对该信号进行响应然后执行资源释放程序，此时三者关闭
 顺序是不一致且不确定的。
 
-如果子线程CostmapROS节点已经自行释放，Controller或Planner实质失去了对其的控制权，
-如果它们仍试图访问CostmapROS，就产生了重复释放（UAF）、资源冲突等一系列并发问题，
-如伪代码\ref{lst:bug:issue3972}所示。
+如果子线程CostmapROS节点已经自行释放，Controller或Planner实质失去了对其的控制
+权，如果它们仍试图访问CostmapROS，就产生了重复释放（UAF）、资源冲突等一系列并发
+问题，如伪代码\ref{lst:bug:issue3972}所示。
 
 \begin{lstlisting}[language=C, caption=漏洞\#3972问题代码, label=lst:bug:issue3972]
 // Planner or Controller:
@@ -77,17 +75,13 @@ Controller::on_cleanup(const rclcpp_lifecycle::State &){
 }
 \end{lstlisting}
 
-对于需要频繁开关的机器人节点，关闭期间内存漏洞可能产生严重后果，但往往被开发者忽略。在 Navigation2 
-\href{https://github.com/ros-planning/navigation2/issues/4175}{Issue\#4175}，
-\href{https://github.com/ros-planning/navigation2/pull/4180}{PR\#4180}，
-\href{https://github.com/ros-planning/navigation2/issues/4166}{Issue\#4166}，
-\href{https://github.com/ros-planning/navigation2/pull/4176}{Pull\#4176}，和 
-\href{https://github.com/ros2/rclcpp/issues/2447}{RclCpp Issue\#2447} 中，
-我们和ROS2开发者讨论了ROS2节点退出机制可能导致的一些并发问题。
+对于需要频繁开关的机器人节点，关闭期间内存漏洞可能产生严重后果，但往往被开发者忽
+略。在 Navigation2 Issue\#4175，PR\#4180，Pull\#4176，和 RclCpp Issue\#2447
+$^{[14]}$ 中，我们和ROS2开发者讨论了ROS2节点退出机制可能导致的一些并发问题。
 
-ROS2惯例是将收到订阅消息、收到服务请求的回调函数交给执行器（Executor）执行，
-因此执行器线程拥有该回调函数的函数指针，当该回调函数所属的类已被释放，
-如伪代码\ref{lst:bug:issue4176}第5行，执行器仍可能访问该回调函数，造成UAF错误。
+ROS2惯例是将收到订阅消息、收到服务请求的回调函数交给执行器（Executor）执行，因此
+执行器线程拥有该回调函数的函数指针，当该回调函数所属的类已被释放，如伪代码
+\ref{lst:bug:issue4176}第5行，执行器仍可能访问该回调函数，造成UAF错误。
 
 \begin{lstlisting}[language=C++, caption=漏洞\#4176问题代码, label=lst:bug:issue4176]
 nav2_util::CallbackReturn
