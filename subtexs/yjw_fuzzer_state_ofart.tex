@@ -1,0 +1,25 @@
+%TODO: 审核，文献，表格格式
+近期有几种方法 $^{[2, 6, 7, 8, 9, 10]}$应用模糊测试于ROS（机器人操作系统）程序。它们自动生成ROS程序的输入，并借助第三方或定制的清洁程序检测内存或语义错误。表1展示了这些方法（包括本文中的我们的框架ROFER）之间的比较。如表\ref{tab:fuzzers}所示，这些方法在测试ROS程序时有三个主要限制：
+
+L1：测试用例生成效率低。除了ROZZ外，其余五种方法从单一维度（即用户命令或传感器信息）生成输入，其中三种方法缺乏时间输入变异的支持（即改变输入项的时间顺序）。为了提高测试覆盖率，ROZZ随机选择变异维度进行输入生成，并支持时间输入变异。然而，随机选择是盲目且低效的，无法识别出对提高覆盖率有前景的变异维度，导致许多生成的输入无助于增加测试覆盖率。
+
+L2：程序反馈效果不佳。SMACH-Fuzz和ASTAA随机生成输入，而没有程序反馈的指导。Ros2-fuzz和ROZZ使用代码覆盖率作为程序反馈，但代码覆盖率对多进程运行情况不敏感，且对不同执行顺序视而不见。为了解决这个问题，Phys-Fuzz和RoboFuzz使用特殊场景指标作为程序反馈，取代代码覆盖率。具体来说，Phys-Fuzz使用危险性评分量化机器人接近危险碰撞的程度；RoboFuzz使用语义反馈量化机器人执行上下文的错误性。然而，危险性评分仅适用于可能导致机器人碰撞的ROS程序；语义反馈要求用户编写每个测试程序的领域特定规格。此外，除了SMACH-Fuzz和RoboFuzz外，其他四种方法忽视了机器人任务的状态机，限制了它们在ROS程序中检测错误的有效性。为了解决这个问题，SMACH-Fuzz和RoboFuzz要求用户手动指定可能危险的状态和机器人任务的语义规则，但这种方式需要特定于被测试程序的大量知识。
+
+L3：通用性和自动化水平低。Ros2-fuzz和ROZZ只能测试C++程序，因为它们需要基于LLVM的代码检测来收集代码覆盖率作为程序反馈。其它四种方法可以测试不同语言的程序，因为它们没有程序反馈（SMACH-Fuzz和ASTAA）或使用其他类型的程序反馈代替代码覆盖率（Phys-Fuzz和RoboFuzz）。然而，对于每个测试的ROS程序，这四种方法都需要大量领域特定知识和手动努力来配置输入生成规则（ASTAA和RoboFuzz），编写有关机器人行为的规格（SMACH-Fuzz和RoboFuzz），检查执行日志（SMACH-Fuzz和Phy-Fuzz）等。
+
+\begin{table*}[t]
+\small
+\centering
+\caption{最新针对ROS系统的Fuzz技术对比}
+\begin{tabular}{lccccc}
+\hline
+\textbf{技术名} & \textbf{输入维度} & \textbf{Temporal Mutation} & \textbf{反馈}& \textbf{自动化程度} & \textbf{漏洞类型} \\ \hline\hline
+SMACH-Fuzz [6] & Single & None & None& Weak & Behavior error \\ \hline
+Phys-Fuzz [7] & Single & None & Hazardousness score  & Weak & Robot collision \\ \hline
+Ros2-fuzz [10] & Single & None & Code coverage   & Good & Memory bug \\ \hline
+ASTAA [8] & Single & Support & None  & Weak & Robustness bug \\ \hline
+RoboFuzz [9] & Single & Support & Semantic feedback & Weak & Correctness bug \\ \hline
+ROZZ [2] & Multiple (random) & Support & Code coverage & Good & Memory bug \\ \hline
+\end{tabular}
+\label{tab:fuzzers}
+\end{table*}

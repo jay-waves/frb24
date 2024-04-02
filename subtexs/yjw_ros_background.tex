@@ -19,7 +19,7 @@
 点初始化完毕开始服务，此时节点处于正常工作状态； \texttt{cleanup()}在节点清理资
 源时调用，用于释放节点所持有的微机资源。
 
-\textbf{ROS事件处理机制}: 
+\textbf{ROS2事件处理机制}: 
 
 节点调用 \texttt{spin()} 函数来持续检查和处理事件，如伪代码\ref{lst:ros_spin}。
 
@@ -49,14 +49,14 @@ ROS消息或待处理的消息，获取到消息实体后，根据消息类型�
 多样化的机器人系统开发。
 
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=15cm]{ros_node_setup.png}
     \caption{ROS节点内部模型, 初始阶段}
     \label{pic:rns}
 \end{figure}
 
-\textbf{ROS 节点释放}
+\textbf{ROS2节点释放}
 
 当ROS2系统的节点将释放时，节点的生命周期状态机会从 activate 状态转换为
 deactivate 状态，此状态仅用于让节点完成必要的最后工作，如完成正在处理的数据传输
@@ -67,14 +67,14 @@ deactivate 状态，此状态仅用于让节点完成必要的最后工作，如
 handlers），如和话题订阅、定时器、服务等回调函数。然后清理节点所打开的文件，断开
 网络连接，释放ROS2上下文，最终释放内存。
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=15cm]{ros_node_cleanup.png}
     \caption{ROS节点内部模型, 释放阶段}
     \label{pic:rnc}
 \end{figure}
 
-\textbf{ROS 通信机制}
+\textbf{ROS2通信机制}
 
 为了适应机器人系统中复杂的通信需求，ROS2设计了一套专用的通信模型。其基础为“发
 布、订阅“模型，支持节点间的异步数据交换。该机制允许ROS2系统内的节点（Node）独立
@@ -97,9 +97,23 @@ handlers），如和话题订阅、定时器、服务等回调函数。然后清
 来实时获取雷达信息，从而完成最终决策。
 
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=13cm]{ros_msg_passing.png}
     \caption{ROS话题通信机制}
     \label{pic:rmp}
+\end{figure}
+
+\textbf{ROS2 通信机制底层实现}
+
+ROS2通信机制底层实质是使用UDP Socket来进程间通信，使用的协议为物联网DDS协
+议，ROS2核心库对其进行了抽象封装，已便捷地被开发者调用。具体而言，对于每种DDS协
+议版本，ROS2会实现一种网络中间件对其API进行包装，并实现由ROS2各类消息形式向DDS消
+息格式的序列化与结构化转化。如图\ref{pic:rmpm}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=13cm]{ros_msg_passing_mdw.png}
+    \caption{ROS话题通信机制}
+    \label{pic:rmpm}
 \end{figure}
