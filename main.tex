@@ -71,11 +71,11 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 % 定义代码块样式
 \lstdefinestyle{codeblock}{
     backgroundcolor=\color{white},    % 背景颜色
-    basicstyle=\ttfamily\small,       % 设置字体样式
+    basicstyle=\ttfamily\small\fontsize{9pt}{8pt}\selectfont, % 设置字体大小和行间距
     breakatwhitespace=false,          % 是否只在空白处自动断行
     breaklines=true,                  % 自动断行
     captionpos=b,                     % 标题位置
-    commentstyle=\color{gray},       % 注释风格
+    commentstyle=\color{gray},        % 注释风格
     frame=single,                     % 单框
     keepspaces=true,                  % 保持空格
     keywordstyle=\color{blue},        % 关键字风格
@@ -90,7 +90,7 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
     stringstyle=\color{orange},       % 字符串风格
     tabsize=2,                        % 制表符占用空格数
     xleftmargin=\parindent,           % 左边距
-    framexleftmargin=12pt,             % 框架左边距，增加些许间距以包含行号
+    framexleftmargin=12pt,            % 框架左边距，增加些许间距以包含行号
 }
 \renewcommand{\lstlistingname}{伪代码}
 \lstset{style=codeblock}
@@ -329,17 +329,14 @@ efficiently adaptable for testing various robot programs.
 
 %******************* 一 作品概述************************
 \section{作品概述}
-  \setParDis %设置段间距为 0
+\setParDis %设置段间距为 0
 \begin{spacing}{1.5} % 行距1.5
 
 
-\subsection{背景介绍}
-\setParDis %设置段间距为 0
-%@author: lhy
+\subsection{背景介绍} %@author: lhy
 \input{subtexs/lhy_background}
 
 \subsection{研究现状}
-\setParDis %设置段间距为 0
 % 这里衔接一下为什么我们想将模糊测试应用到ROS上
 
 \subsubsection{ROS常见测试方案}
@@ -348,10 +345,11 @@ efficiently adaptable for testing various robot programs.
 
 \subsubsection{模糊测试及其应用}
 %@author: jfb
-强调：模糊测试目前很火，但是没有用到ros上
+模糊测试是近年来最受欢迎的软件测试技术之一，通过向系统输入异常、随机或无效的数据来暴露软件中的缺陷、漏洞和崩溃。模糊测试在不需要了解应用程序内部逻辑的情况下，检测软件如何处理意外或错误的输入，非常适合寻找安全漏洞，如缓冲区溢出、执行流程控制错误、内存泄露等。同时，利用模糊测试发现了许多高影响力的安全漏洞（如Heartbleed、Shellshock等），进一步证明了其有效性和重要性。
+
+尽管模糊测试在软件安全领域得到了广泛应用，但在ROS环境中的应用相对较少。随着人工智能术的发展和ROS在人工智能如无人驾驶等研究及应用中的重要性增加，对于ROS环境的模糊测试方法的需求和研究也在逐渐增长。开发专门针对ROS系统特点的模糊测试工具和技术，可以有效提高机器人软件的可靠性和安全性。
 
 \subsection{作品概述}
-\setParDis %设置段间距为 0
 %@author: yjw
 \input{subtexs/yjw_overview}
 
@@ -360,41 +358,24 @@ efficiently adaptable for testing various robot programs.
 \section{作品设计与实现}
 \setParDis %设置段间距为 0
 
-\subsection{技术背景与预备知识}
-\setParDis %设置段间距为 0
-%@author: jfb
-\subsubsection{模糊测试框架}
-\subsubsection{漏洞种类及危害}
-%@author: wkt
+\subsection{技术背景与预备知识} %@author: wkt, yjw, jfb
 \input{subtexs/wkt2}
-\subsubsection{ASan}
-\subsubsection{基于覆盖率的遗传算法}
-\subsubsection{ROS2系统机制}
+\input{subtexs/jfb_tech_background.tex}
 \input{subtexs/yjw_ros_background.tex}
-%@author: yjw
 
-\subsection{关键设计}
-\setParDis %设置段间距为 0
+\subsection{关键设计} %@author: yjw
 \input{subtexs/yjw_key_fuzz_design}
-%@author: yjw
 
 %********************* 三 成果与分析 *****************
-\section{作品测试与成果分析}
+\section{作品测试与成果分析} %@author: wkt
 \setParDis %设置段间距为 0
-%@author: wkt
-\input{subtexs/wkt}
 
-\section{创新型说明与前景分析}
-\setParDis %设置段间距为 0
-%@author: jfb
-\subsection{创新性说明}
-\setParDis %设置段间距为 0
-\begin{enumerate}
-  \item 创新地将模糊测试技术迁移
-  \item 创新测试方法，高效性
-\end{enumerate}
+\input{subtexs/wkt}
+% 创新型说明与前景分析 @author: jfb
+\input{subtexs/jfb_innovation.tex}
 
 \section*{结论}% section*生成无标号章节
+\setParDis %设置段间距为 0
 \addcontentsline{toc}{section}{结论} % 将无标号章节添加至目录
 %@author: jfb
 傻逼冯如杯
