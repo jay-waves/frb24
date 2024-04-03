@@ -87,7 +87,7 @@ ASan由两部分组成：一个插桩模块和一个运行时库。插桩模块�
 测堆外还能检测栈和全局变量中的错误，并且比AddrCheck快一个数量级。接下来将描述
 ASan如何编码和映射其影子内存、插入其插桩，以及其运行时库如何操作。
 
-\textbf{（一）影子内存}
+\textbf{ASan影子内存}
 
 malloc函数返回的内存地址通常至少对齐到8字节。这导致任何对齐的8字节序列的应用程序
 堆内存都处于9种不同状态之一：前k个（0 $\leq$ k $\leq$ 8）字节是可寻址的，而剩下
@@ -97,59 +97,46 @@ ASan将虚拟地址空间的八分之一专用于其影子内存，并使用一�
 来将应用程序地址翻译成相应的影子地址。给定应用程序内存地址Addr，影子字节的地址计
 算为(Addr$>>$3)+Offset。如果$Max-1$是虚拟地址空间中的最大有效地址，那么Offset的
 值应该选择为从Offset到$Offset+Max/8$的区域在启动时不被占用。在典型的32位Linux或
-MacOS系统上，其中虚拟地址空间为0x00000000$-$0xffffffff， ASan使用Offset =
-0x20000000 (2的29次方)。在一个具有47个有效地址位的64位系统上，我们使用Offset =
-0x0000100000000000 (2的44次方)。在某些情况下（例如，在Linux上使用-fPIE/-pie编译
-器标志），可以使用零偏移来进一步简化插桩。
-\begin{figure}[ht]
+MacOS系统上，其中虚拟地址空间为\texttt{0x00000000-0xffffffff}， ASan使用\texttt{Offset =
+0x20000000} (2的29次方)。
+\begin{figure}[H]
 	\centering
 	\includegraphics[height=7cm, width=10cm]{shadow.jpg}
 	\caption{影子内存地址布局}
 	\label{fig:shadow}
 \end{figure}
 
-图\ref{fig:shadow}展示了地址空间布局。应用程序内存被分为两部分（低和高），它们映射到相应的影子区域。将影子映射应用于影子区域中的地址会给我们在“坏”区域的地址，该区域通过页面保护标记为不可访问。
+图\ref{fig:shadow}展示了地址空间布局。应用程序内存被分为两部分（低和高），它们映
+射到相应的影子区域。将影子映射应用于影子区域中的地址会给我们在“坏”区域的地址，该
+区域通过页面保护标记为不可访问。
 
 我们对每个影子字节使用以下编码：0意味着相应的应用程序内存区域的所有8字节都是可寻
-址的；k（1 $\leq$ k$\leq$ 7）意味着前k个字节是可寻址的；任何负值表示整个8字节字
+址的 \texttt{k(1 <= k<= 7)} 意味着前k个字节是可寻址的；任何负值表示整个8字节字
 是不可寻址的。我们使用不同的负值来区分不同种类的不可寻址内存（堆红区、栈红区、全
-局红区、释放的内存）。这种影子映射可以概括为形式(Addr$>>$Scale)+Offset，其中
+局红区、释放的内存）。这种影子映射可以概括为形式\texttt{(Addr>>Scale)+Offset}，其中
 Scale是1...7之一。当Scale=N时，影子内存占据虚拟地址空间的$1/2^N$，红区（以及
 malloc对齐）的最小尺寸是$2^N$字节。每个影子字节描述了$2^N$字节的状态，并编码$2^N
 +1$不同的值。更大的Scale值需要较少的影子内存但更大的红区来满足对齐要求。Scale值
 大于3需要对8字节访问进行更复杂的插桩，但为可能无法放弃其地址空间连续八分之一的应
 用程序提供了更多的灵活性。
 
-\textbf{（二）插桩模块}
+\textbf{ASan插桩模块}
 
 当对一个8字节的内存访问进行插桩时，AddressSanitizer计算相应影子字节的地址，加载
-该字节，并检查它是否为零：
+该字节，并检查它是否为零，如代码段\ref{shadowaddr}所示。
 
+\begin{figure}[H]
 \begin{lstlisting}[language=C++]
 ShadowAddr = (Addr >> 3) + Offset;
 if (*ShadowAddr != 0)
 ReportAndCrash(Addr);
 \end{lstlisting}
+\caption{计算影子内存地址}
+\label{lst:shadowaddr}
+\end{figure}
 
-当对1字节、2字节或4字节的访问进行插桩时，插桩过程会稍微复杂：如果影子值是正数
-（即，8字节词中的前k个字节是可寻址的），我们需要将地址的最后3位与k进行比较。
 
-\begin{lstlisting}[language=C++]
-ShadowAddr = (Addr >> 3) + Offset;
-k = *ShadowAddr;
-if (k != 0 && ((Addr & 7) + AccessSize > k))
-  ReportAndCrash(Addr);
-\end{lstlisting}
-
-在这两种情况下，插桩仅在原始代码的每次内存访问中插入一个内存读取。我们假设一个N
-字节的访问是对齐到N的。ASan可能会错过由于未对齐访问引起的错误。
-
-ASan的插桩阶段处在LLVM优化管道的最末端。这样我们只对那些经过LLVM优化器的所有标量
-和循环优化后仍然存在的内存访问进行插桩。例如，通过LLVM优化掉的本地栈对象的内存访
-问将不会被插桩。同时，我们不需要对LLVM代码生成器生成的内存访问进行插桩（例如，寄
-存器溢出）。
-
-\textbf{（三）运行库}
+\textbf{ASan运行库}
 
 运行时库的主要目的是管理影子内存。在应用程序启动时，整个影子区域都会被映射，以便
 程序的其他部分无法使用它。影子内存的坏段被保护起来。在Linux上，影子区域在启动时
@@ -188,22 +175,19 @@ malloc重新分配。目前，隔离区被实现为一个FIFO队列，随时持�
 库函数将红区标记为有毒，并记录地址以供进一步的错误报告。
 
 对于栈对象，红区在运行时创建并标记为有毒。目前，使用了32字节的红区（加上最多31字
-节用于对齐）。例如，给定一个程序：
+节用于对齐）。如代码段\ref{lst:asanfoo}中，给定程序\texttt{foo()}，为了检测对栈
+对象的越界访问，AddressSanitizer对原有的函数foo进行了转换，增加了红区
+（redzones）来围绕数组arr。这些红区在运行时被标记为“有毒”的，用于捕获任何对这些
+区域的非法访问。
 
+\begin{figure}[H]
 \begin{lstlisting}[language=C++]
+// 转换前代码：
 void foo() {
 	char a[10];
 	<function body>
 }
-\end{lstlisting}
-
-转换后的代码将类似于：
-
-为了检测对栈对象的越界访问，AddressSanitizer对原有的函数foo进行了转换，增加了红
-区（redzones）来围绕数组arr。这些红区在运行时被标记为“有毒”的，用于捕获任何对这
-些区域的非法访问。下面是转换后的代码示例：
-
-\begin{lstlisting}[language=C++]
+// ASan转换后代码：
 void foo() {
 	char rz1[32]; // 前红区
 	char arr[10]; // 原始数组
@@ -220,6 +204,9 @@ void foo() {
 	shadow[0] = shadow[1] = shadow[2] = 0;
 }
 \end{lstlisting}
+\label{lst:asanfoo}
+\caption{ASan程序转换示例}
+\end{figure}
 
 同时，ASan是线程安全的。影子内存只在相应的应用程序内存不可访问时被修改（在malloc
 或free内部、在创建或销毁栈帧期间、在模块初始化期间）。所有其他对影子内存的访问都

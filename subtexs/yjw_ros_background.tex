@@ -21,9 +21,10 @@
 
 \textbf{ROS2事件处理机制}: 
 
-节点调用 \texttt{spin()} 函数来持续检查和处理事件，如伪代码\ref{lst:ros_spin}。
+节点调用 \texttt{spin()} 函数来持续检查和处理事件，如伪代码\ref{lst:rosspin}。
 
-\begin{lstlisting}[language=Python, caption=ROS2事件循环示例, label=lst:ros_spin]
+\begin{figure}[H]
+\begin{lstlisting}[language=Python]
 spin():
     while True:
         new_msg <- ros_dds_listener()
@@ -31,6 +32,9 @@ spin():
         Executor.execute(*handler)
         sleep(0.1)
 \end{lstlisting}
+\caption{ROS2事件循环示例}
+\label{lst:rosspin}
+\end{figure}
 
 \texttt{spin()} 实质是一种事件循环，它会保持节点循环和监听，检查系统中是否有新的
 ROS消息或待处理的消息，获取到消息实体后，根据消息类型获取节点初始化时注册的回调

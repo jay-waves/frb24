@@ -1,13 +1,18 @@
-下面挑选我们的漏洞测试系统在ROS相关项目中检测出的几个典型漏洞进行分析，它们充分体现了本系统的价值。
-在Navigation2 Issue\#4177中，
-我们指出了一个典型的数组越界漏洞。
+% 2024-04-03
+% author: yjw
 
-Navigation2 系统中的节点会监听 \texttt{\textbackslash costmap}，来更新代价地图信息，
-但是缺乏对代价地图信息合法性的检查。如伪代码\ref{lst:bug:msg}中的map消息，width和height字段
-指出了代价地图的宽高，data字段给出了代价地图的数据。对于正常消息，$width\times height$ 
-应该等于data数组的大小，但这一点对于传输错误或恶意投放的消息这并不是被严格保证的。
+下面挑选我们的漏洞测试系统在ROS相关项目中检测出的几个典型漏洞进行分析，它们充分
+体现了本系统的价值。在Navigation2 Issue\#4177中，我们指出了一个典型的数组越界漏
+洞。
 
-\begin{lstlisting}[language=, caption=漏洞\#4177恶意消息, label=lst:bug:msg]
+Navigation2 系统中的节点会监听 \texttt{\textbackslash costmap}，来更新代价地图信
+息，但是缺乏对代价地图信息合法性的检查。如伪代码\ref{lst:bug:msg}中的map消
+息，width和height字段指出了代价地图的宽高，data字段给出了代价地图的数据。对于正
+常消息，$width\times height$应该等于data数组的大小，但这一点对于传输错误或恶意投
+放的消息这并不是被严格保证的。
+
+\begin{figure}[H]
+\begin{lstlisting}[]
 ros2 topic pub /map nav_msgs/msg/OccupancyGrid "
 ...
 info:
@@ -17,17 +22,20 @@ info:
   ...
 data: [-1, 0, 1, 1, -1]  " <- would cause buffer overflow
 \end{lstlisting}
+  \caption{漏洞\#4177恶意消息}
+\label{lst:bug:msg}
+\end{figure}
 
 Navigation2 自动导航项目并没有对这一点进行检查，而直接用width和height声明存储data的数组变量。
 当\texttt{width}和\texttt{height}大于数组\texttt{data}的实际大小时，会导致程序访问越界（SEGV）。
 初始化地图时该bug可能触发，见\ref{lst:bug:segv}第6行；运行时，如果接收到外部更新的地图信息，
 也可能触发该问题，见\ref{lst:bug:segv}第24行。
 
-\begin{lstlisting}[language=C++, caption=漏洞\#4177问题代码, label=lst:bug:segv]
+\begin{figure}[H]
+\begin{lstlisting}[language=C++]
 /* 初始化时可能发生 */
 // create the costmap
 costmap_ = new unsigned char[size_x_ * size_y_];
-
 for (unsigned int it = 0; it < size_x_ * size_y_; it++) {
   data = map.data[it]; // <- SEGV
   if (data == nav2_util::OCC_GRID_UNKNOWN) {
@@ -42,7 +50,6 @@ void CostmapSubscriber::toCostmap2D()
 {
   auto msg = std::atomic_load(&costmap_msg_);
 	...
-
   unsigned char * master_array = costmap_->getCharMap();
   unsigned int index = 0;
   for (unsigned int i = 0; i < msg->metadata.size_x; ++i) {
@@ -53,6 +60,9 @@ void CostmapSubscriber::toCostmap2D()
   }
 }
 \end{lstlisting}
+  \caption{漏洞\#4177问题代码}
+\label{lst:bug:segv}
+\end{figure}
 
 在Naviagtion2PR\#3972, PR\#3958, Issue\#3940$^{[13]}$中,我们报告了一个典型的并发
 bug，本系统通过插桩延迟技术，找到了Navigation2项目中Costmap结构数据竞争的根本原
@@ -68,12 +78,16 @@ Controller和Planner的子节点（独立线程）。当ROS2系统关闭时，Li
 权，如果它们仍试图访问CostmapROS，就产生了重复释放（UAF）、资源冲突等一系列并发
 问题，如伪代码\ref{lst:bug:issue3972}所示。
 
-\begin{lstlisting}[language=C, caption=漏洞\#3972问题代码, label=lst:bug:issue3972]
+\begin{figure}[H]
+\begin{lstlisting}[language=C++]
 // Planner or Controller:
 Controller::on_cleanup(const rclcpp_lifecycle::State &){
 	costmap_ros_->cleanup() // <-UAF, costmap already cleanup itself.
 }
 \end{lstlisting}
+  \caption{漏洞\#3972问题代码}
+  \label{lst:bug:issue3972}
+\end{figure}
 
 对于需要频繁开关的机器人节点，关闭期间内存漏洞可能产生严重后果，但往往被开发者忽
 略。在 Navigation2 Issue\#4175，PR\#4180，Pull\#4176，和 RclCpp Issue\#2447
@@ -83,10 +97,10 @@ ROS2惯例是将收到订阅消息、收到服务请求的回调函数交给执�
 执行器线程拥有该回调函数的函数指针，当该回调函数所属的类已被释放，如伪代码
 \ref{lst:bug:issue4176}第5行，执行器仍可能访问该回调函数，造成UAF错误。
 
-\begin{lstlisting}[language=C++, caption=漏洞\#4176问题代码, label=lst:bug:issue4176]
+\begin{figure}[H]
+\begin{lstlisting}[language=C++]
 nav2_util::CallbackReturn
 AmclNode::on_cleanup(const rclcpp_lifecycle::State & /*state*/){
-  
   ...
   initial_pose_sub_.rest(); // <- UAF
   
@@ -95,4 +109,7 @@ AmclNode::on_cleanup(const rclcpp_lifecycle::State & /*state*/){
 }
 
 \end{lstlisting}
+  \caption{漏洞\#4176问题代码}
+  \label{lst:bug:issue4176}
+\end{figure}
 

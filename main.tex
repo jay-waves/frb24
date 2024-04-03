@@ -65,6 +65,7 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 % by yjw
 % \texttt 用于行内代码，等宽字体，不知道让不让用
 \usepackage{listings} % 用于代码排版
+% 代码请放到figure环境中去使用，共享图片的编号
 \usepackage{xcolor} % 用于代码高亮
 % 定义代码块样式
 \lstdefinestyle{codeblock}{
@@ -78,7 +79,7 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
     keepspaces=true,                  % 保持空格
     keywordstyle=\color{blue},        % 关键字风格
     numbers=left,                     % 行号位置
-    numbersep=8pt,                    % 行号与代码的距离
+    numbersep=15pt,                    % 行号与代码的距离
     numberstyle=\tiny\color{gray},    % 行号样式
     rulecolor=\color{black},          % 框架颜色
     showspaces=false,                 % 不显示空格
@@ -87,11 +88,10 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
     stepnumber=1,                     % 步长
     stringstyle=\color{orange},       % 字符串风格
     tabsize=2,                        % 制表符占用空格数
-    xleftmargin=\parindent,           % 左边距
-    framexleftmargin=12pt,            % 框架左边距，增加些许间距以包含行号
+    xleftmargin=35pt,                 % 左边距
+    xrightmargin=25pt,
+    framexleftmargin=25pt,            % 框架左边距，增加些许间距以包含行号
 }
-\captionsetup[lstlisting]{font={small}, labelfont=bf, labelsep=mysep, textfont=bf}
-\renewcommand{\lstlistingname}{伪代码}
 \lstset{style=codeblock}
 %********************代码段设置********************
 
