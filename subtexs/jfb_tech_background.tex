@@ -90,14 +90,14 @@ ASan如何编码和映射其影子内存、插入其插桩，以及其运行时�
 \textbf{ASan影子内存}
 
 malloc函数返回的内存地址通常至少对齐到8字节。这导致任何对齐的8字节序列的应用程序
-堆内存都处于9种不同状态之一：前k个（0 $\leq$ k $\leq$ 8）字节是可寻址的，而剩下
-的8 $-$ k字节则不是。这种状态可以编码成一个影子内存的单字节。
+堆内存都处于9种不同状态之一：前k个\texttt{(0<=k<=8)}字节是可寻址的，而剩下
+的\texttt{8-k}字节则不是。这种状态可以编码成一个影子内存的单字节。
 
 ASan将虚拟地址空间的八分之一专用于其影子内存，并使用一个比例和偏移的直接映射方式
 来将应用程序地址翻译成相应的影子地址。给定应用程序内存地址Addr，影子字节的地址计
-算为(Addr$>>$3)+Offset。如果$Max-1$是虚拟地址空间中的最大有效地址，那么Offset的
-值应该选择为从Offset到$Offset+Max/8$的区域在启动时不被占用。在典型的32位Linux或
-MacOS系统上，其中虚拟地址空间为\texttt{0x00000000-0xffffffff}， ASan使用\texttt{Offset =
+算为\texttt{(Addr>>3)+Offset}。如果\texttt{Max-1}是虚拟地址空间中的最大有效地址，那么Offset的
+值应该选择为从Offset到\texttt{Offset+Max/8}的区域在启动时不被占用。在典型的32位Linux或
+MacOS系统上，其中虚拟地址空间为\texttt{0x00000000\\-0xffffffff}， ASan使用\texttt{Offset =
 0x20000000} (2的29次方)。
 \begin{figure}[H]
 	\centering
