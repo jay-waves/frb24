@@ -26,7 +26,7 @@
 \usepackage{caption} %caption
 \usepackage{subcaption} %子图的caption
 \usepackage{changepage} %左右缩进
-
+\usepackage{url} % 处理链接换行
 
 \graphicspath{ {pictures/} }
 \let\algorithm\relax
@@ -66,8 +66,8 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 % by yjw
 % \texttt 用于行内代码，等宽字体，不知道让不让用
 \usepackage{listings} % 用于代码排版
+% 代码请放到figure环境中去使用，共享图片的编号
 \usepackage{xcolor} % 用于代码高亮
-
 % 定义代码块样式
 \lstdefinestyle{codeblock}{
     backgroundcolor=\color{white},    % 背景颜色
@@ -80,7 +80,7 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
     keepspaces=true,                  % 保持空格
     keywordstyle=\color{blue},        % 关键字风格
     numbers=left,                     % 行号位置
-    numbersep=8pt,                    % 行号与代码的距离
+    numbersep=15pt,                    % 行号与代码的距离
     numberstyle=\tiny\color{gray},    % 行号样式
     rulecolor=\color{black},          % 框架颜色
     showspaces=false,                 % 不显示空格
@@ -89,13 +89,11 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
     stepnumber=1,                     % 步长
     stringstyle=\color{orange},       % 字符串风格
     tabsize=2,                        % 制表符占用空格数
-    xleftmargin=\parindent,           % 左边距
-    framexleftmargin=12pt,            % 框架左边距，增加些许间距以包含行号
+    xleftmargin=35pt,                 % 左边距
+    xrightmargin=25pt,
+    framexleftmargin=25pt,            % 框架左边距，增加些许间距以包含行号
 }
-\renewcommand{\lstlistingname}{伪代码}
 \lstset{style=codeblock}
-
-\usepackage{hyperref} %超链接支持
 %********************代码段设置********************
 
 %********************中文字号设置********************
@@ -204,25 +202,18 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
     \begin{center}
       {
         \fontsize{22pt}{3}\selectfont
-        \zhongsong{\Fengru 项目论文Latex模板} %黑体这样调用，其余字体同理
+        \zhongsong{针对机器人操作系统的自动测试框架} 
       } 
         % \zhongsong{“冯如杯”竞赛主赛道项目是什么}
     \end{center}
-    \rightline{\xinwei\sanhao{——基于 Latex 的论文模板}} % XSP 2023/3/3: 副标题二号华文新魏居右
+    \rightline{\xinwei\sanhao{——基于模糊测试技术}} % XSP 2023/3/3: 副标题二号华文新魏居右
 \end{spacing}
 %格式控制部分
-% \par \ 
-% \par \
 \par \ 
 \par \
 \par \ 
 \par \
-% \begin{center}
-%     \sihao
-%     \textbf{学院：计算机学院}
-%     \par \ 
-%     \textbf{本模板原作者：Someday}
-% \end{center}
+
 
 %格式控制部分
 \par \ 
@@ -259,8 +250,8 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 进程多线程的软件特点，本框架通过程序插桩延迟来提高数据竞争概率；针对机器人程序弱
 状态特点，本框架通过流量分析等黑盒手段，来辅助推测程序内部状态。
 
-本作品设计的测试框架短期内共发掘20个ROS2相关软件的内存漏洞、并发漏洞，其中11个得
-到开发者确认修复，其中有4个重要漏洞被美国通用漏洞披露（CVE）收录，7个通过中国国
+本作品设计的测试框架短期内共发掘28个ROS2相关软件的内存漏洞、并发漏洞，其中11个得
+到开发者确认修复，其中有8个重要漏洞被美国通用漏洞披露（CVE）收录，7个通过中国国
 家漏洞库（CNVD）二级审核，正在等待三级审核。
 
 综上，本作品——针对机器人系统的模糊测试框架在软件测试中有较高实践价值，已为开源社
@@ -275,15 +266,15 @@ BoldItalicFont = times-new-roman-bold-italic.ttf
 \section*{\textbf{Abstract}} % XSP 2023/3/8: Abstract 加粗
 \begin{spacing}{1.5}
 \begin{adjustwidth}{0.42cm}{0.42cm}
-  \setParDis %设置段间距为 0
+\setParDis %设置段间距为 0
 
-The swift advancement in commercial robotics and autonomous driving has spurred
-the development of associated software tools, notably the Robot Operating System
-(ROS2). Celebrated for its open-source, cross-platform capabilities, and
-extensive toolkit, ROS2 has garnered widespread adoption across academia and
-industry. However, its growth is hampered by common open-source software issues
-like security vulnerabilities and instability, posing risks to application
-safety.
+\noindent\hspace{\parindent}The swift advancement in commercial robotics and
+autonomous driving has spurred the development of associated software tools,
+notably the Robot Operating System (ROS2). Celebrated for its open-source,
+cross-platform capabilities, and extensive toolkit, ROS2 has garnered widespread
+adoption across academia and industry. However, its growth is hampered by common
+open-source software issues like security vulnerabilities and instability,
+posing risks to application safety.
 
 Addressing the need for efficient testing in \textbf{ROS2-related programs}, we
 introduced automatic \textbf{fuzz} testing to enhance software reliability. By
@@ -297,10 +288,9 @@ instability by randomizing inputs like received communication messages. It
 targets software's multi-process and multi-threaded nature by increasing data
 race probabilities via program instrumentation delays. Additionally, to navigate
 the challenges posed by robots' weak states, our framework utilizes black-box
-methods, such as traffic analysis, to infer internal states. The approach led to
-\textbf{the discovery of 20 ROS2 software vulnerabilities, with 11 confirmed and
-fixed by developers, including 4 recognized by the US's CVE and 7 awaiting final
-review by China's CNVD.}
+methods, such as traffic analysis, to infer internal states. The approach led to the discovery of 28 ROS2 software vulnerabilities, with 11 confirmed and
+fixed by developers, including 8 recognized by the US's CVE and 7 awaiting final
+review by China's CNVD.
 
 This work demonstrates the high practical value of our fuzz testing framework
 for robotic systems, contributing significantly to the open-source community and
@@ -345,9 +335,16 @@ efficiently adaptable for testing various robot programs.
 
 \subsubsection{模糊测试及其应用}
 %@author: jfb
-模糊测试是近年来最受欢迎的软件测试技术之一，通过向系统输入异常、随机或无效的数据来暴露软件中的缺陷、漏洞和崩溃。模糊测试在不需要了解应用程序内部逻辑的情况下，检测软件如何处理意外或错误的输入，非常适合寻找安全漏洞，如缓冲区溢出、执行流程控制错误、内存泄露等。同时，利用模糊测试发现了许多高影响力的安全漏洞（如Heartbleed、Shellshock等），进一步证明了其有效性和重要性。
+模糊测试是近年来最受欢迎的软件测试技术之一，通过向系统输入异常、随机或无效的数据
+来暴露软件中的缺陷、漏洞和崩溃。模糊测试在不需要了解应用程序内部逻辑的情况下，检
+测软件如何处理意外或错误的输入，非常适合寻找安全漏洞，如缓冲区溢出、执行流程控制
+错误、内存泄露等。同时，利用模糊测试发现了许多高影响力的安全漏洞（如
+Heartbleed、Shellshock等），进一步证明了其有效性和重要性。
 
-尽管模糊测试在软件安全领域得到了广泛应用，但在ROS环境中的应用相对较少。随着人工智能术的发展和ROS在人工智能如无人驾驶等研究及应用中的重要性增加，对于ROS环境的模糊测试方法的需求和研究也在逐渐增长。开发专门针对ROS系统特点的模糊测试工具和技术，可以有效提高机器人软件的可靠性和安全性。
+尽管模糊测试在软件安全领域得到了广泛应用，但在ROS环境中的应用相对较少。随着人工
+智能技术的发展和ROS在人工智能如无人驾驶等研究及应用中的重要性增加，对于ROS环境的模
+糊测试方法的需求和研究也在逐渐增长。开发专门针对ROS系统特点的模糊测试工具和技
+术，可以有效提高机器人软件的可靠性和安全性。
 
 \subsection{作品概述}
 %@author: yjw
@@ -378,7 +375,18 @@ efficiently adaptable for testing various robot programs.
 \setParDis %设置段间距为 0
 \addcontentsline{toc}{section}{结论} % 将无标号章节添加至目录
 %@author: jfb
-傻逼冯如杯
+综上所述，本作品成功开发并应用了一种创新的针对ROS的模糊测试框架，进一步提高机器
+人应用程序的安全性和稳定性。通过对ROS系统进行深入的安全漏洞分析和测试，我们的框
+架能够自动化地生成测试用例，有效地识别和定位潜在的安全风险。本框架不仅实现了对基
+本ROS节点的广泛覆盖，还针对ROS2引入的新特性和改进进行了专门的测试和优化，确保了
+对最新ROS版本的全面支持。我们的框架采用了多种先进的模糊测试策略，包括基于属性的
+输入生成、时间序列分析以及动态行为监控等。这些策略的结合不仅大大提高了测试用例的
+有效性，还能够模拟复杂的操作环境，更准确地反映真实世界中的应用场景。
+
+经过对项目的广泛测试，本作品在测试程序中发现了28个真实漏洞，并提供了稳定的复现办
+法。这些成果已经向ROS社区反馈，并得到了部分漏洞的修复和更新。这不仅证明了我们框
+架的有效性与漏洞的价值，也为ROS系统的安全研究和开发提供了宝贵的实践经验和数据支
+持。
 
 %注意: 文件大小不超过5M。%
 
@@ -390,19 +398,19 @@ efficiently adaptable for testing various robot programs.
 \section*{参考文献} % section*生成无标号章节题目
 \addcontentsline{toc}{section}{参考文献} % 将无标号章节添加至目录
 % 延迟插桩论文
-[1]Stoica, B.A., Lu, S., Musuvathi, M., \& Nath, S. \textit{WAFFLE: Exposing Memory Ordering Bugs Efficiently with Active Delay Injection}. In EuroSys'23, May 2023. 
+[1] Stoica, B.A., Lu, S., Musuvathi, M., \& Nath, S. \textit{WAFFLE: Exposing Memory Ordering Bugs Efficiently with Active Delay Injection}. In EuroSys'23, May 2023. 
 
 % ROZZ论文
-[2]K. -T. Xie, J. -J. Bai, Y. -H. Zou and Y. -P. Wang. \textit{ROZZ: Property-based Fuzzing for Robotic Programs in ROS}. 2022 International Conference on Robotics and Automation (ICRA), Philadelphia, PA, USA, 2022, pp. 6786-6792.
+[2] K. -T. Xie, J. -J. Bai, Y. -H. Zou and Y. -P. Wang. \textit{ROZZ: Property-based Fuzzing for Robotic Programs in ROS}. 2022 International Conference on Robotics and Automation (ICRA), Philadelphia, PA, USA, 2022, pp. 6786-6792.
 
 % ROS Robust 221 bugs
-[3]Timperley, C.S., van der Hoorn, G., Santos, A., Deshpande, H., \& Wasowski, A. \textit{ROBUST: 221 bugs in the Robot Operating System}. Empirical Software Engineering, 29(3), 57, 2024.
+[3] Timperley, C.S., van der Hoorn, G., Santos, A., Deshpande, H., \& Wasowski, A. \textit{ROBUST: 221 bugs in the Robot Operating System}. Empirical Software Engineering, 29(3), 57, 2024.
 
 % in wkt.tex, use gazebo
-[4]"Gazebo: a robot simulation framework." Available: http://gazebosim.org/.
+[4] "Gazebo: a robot simulation framework." Available: \url{http://gazebosim.org}.
 
 % Asan
-[5]Serebryany, K., Bruening, D., Potapenko, A., \& Vyukov, D. \textit{AddressSanitizer: A Fast Address Sanity Checker}. In USENIX ATC 2012, 2012.
+[5] Serebryany, K., Bruening, D., Potapenko, A., \& Vyukov, D. \textit{AddressSanitizer: A Fast Address Sanity Checker}. In USENIX ATC 2012, 2012.
 
 % 机器人相关fuzz，用于同类技术对比, 当然也包括[2]
 [6] Delgado, R., Campusano, M., \& Bergel, A. \textit{Fuzz testing in behavior-based robotics}. In Proceedings of the 2021 International Conference on Robotics and Automation (ICRA), 9375–9381, 2021.
@@ -414,11 +422,30 @@ efficiently adaptable for testing various robot programs.
 [9] Kim, S. \& Kim, T. \textit{RoboFuzz: fuzzing robotic systems over robot operating system (ROS) for finding correctness bugs}. In Proceedings of the 30th International Symposium on the Foundations of Software Engineering (FSE), 447–458, 2022.
 
 % ros2-fuzz
-[10] "Ros2-fuzz: automatic fuzzing for ROS2." Available: https://github.com/rosin-project/ros2 fuzz.
+[10] "Ros2-fuzz: automatic fuzzing for ROS2." Available: \url{https://github.com/rosin-project/ros\_fuzz}.
 
 % AFL
 [11] Zalewski, M. \textit{American Fuzzy Lop: A Security-Oriented Fuzzing Tool}. In Proceedings of the Black Hat USA, 2015.
 
+% our bugs' PR and Issue
+[12] "SEGV in Navigation2 Issues\#4177." Available: \url{https://github.com/ros-planning/navigation2/issues/4177}.
+
+[13] "Data Race causing UAF in Navigation2 PR\#3972, PR\#3958, Issue\#3940." Available: \url{https://github.com/ros-planning/navigation2/pull/3972}.
+
+[14] "Another UAF in Nagation2 Issue\#4175, PR\#4180, PR\#4176, RclCPP\#2447." Available: \url{https://github.com/ros-planning/navigation2/issues/4175}.
+
+% lhy 部分文献
+[15] SAE International. (2018). Levels of driving automation for on-road vehicles. Available: \url{https://www.sae.org/standards/content/j3016\_201806}.
+
+[16] The Economist Intelligence Unit. (2020). The future of autonomous vehicles: Adoption, impact, and innovation. Available: \url{https://www.eiu.com/n/autonomous-vehicles-adoption-impact-innovation}.
+
+[17] McKinsey \& Company. (2019). The impact of autonomous driving technology on the economy. Available: \url{https://www.mckinsey.com/industries/automotive-and-assembly/our-insights/the-impact-of-autonomous-driving-technology-on-the-economy}.
+
+[18] National Highway Traffic Safety Administration. (2018). Automated vehicles for safety. Available: \url{https://www.nhtsa.gov/technology-innovation/automated-vehicles-safety}.
+
+[19] National Transportation Safety Board. (2018). Preliminary report: Highway HWY18MH010. Available: \url{https://www.ntsb.gov/investigations/AccidentReports/Reports/HWY18MH010-prelim.pdf.}
+
+[20] Petit, J., \& Shladover, S. E. (2015). Potential cyberattacks on automated vehicles. IEEE Transactions on Intelligent Transportation Systems, 16(2), 546-556. 
 
 % \begingroup
 % \setstretch{2.0}    %行距2
