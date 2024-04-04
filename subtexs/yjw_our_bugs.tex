@@ -6,7 +6,7 @@
 洞。
 
 Navigation2 系统中的节点会监听 \texttt{\textbackslash costmap}，来更新代价地图信
-息，但是缺乏对代价地图信息合法性的检查。如伪代码\ref{lst:bug:msg}中的map消
+息，但是缺乏对代价地图信息合法性的检查。如代码段\ref{lst:bug:msg}中的map消
 息，width和height字段指出了代价地图的宽高，data字段给出了代价地图的数据。对于正
 常消息，$width\times height$应该等于data数组的大小，但这一点对于传输错误或恶意投
 放的消息这并不是被严格保证的。
@@ -26,10 +26,11 @@ data: [-1, 0, 1, 1, -1]  " <- would cause buffer overflow
 \label{lst:bug:msg}
 \end{figure}
 
-Navigation2 自动导航项目并没有对这一点进行检查，而直接用width和height声明存储data的数组变量。
-当\texttt{width}和\texttt{height}大于数组\texttt{data}的实际大小时，会导致程序访问越界（SEGV）。
-初始化地图时该bug可能触发，见\ref{lst:bug:segv}第6行；运行时，如果接收到外部更新的地图信息，
-也可能触发该问题，见\ref{lst:bug:segv}第24行。
+Navigation2 自动导航项目并没有对这一点进行检查，而直接用width和height声明存储
+data的数组变量。当\texttt{width}和\texttt{height}大于数组\texttt{data}的实际大小
+时，会导致程序访问越界（SEGV）。初始化地图时该bug可能触发，见代码段
+\ref{lst:bug:segv}第6行；运行时，如果接收到外部更新的地图信息，也可能触发该问
+题，见代码段\ref{lst:bug:segv}第24行。
 
 \begin{figure}[H]
 \begin{lstlisting}[language=C++]
