@@ -288,9 +288,8 @@ instability by randomizing inputs like received communication messages. It
 targets software's multi-process and multi-threaded nature by increasing data
 race probabilities via program instrumentation delays. Additionally, to navigate
 the challenges posed by robots' weak states, our framework utilizes black-box
-methods, such as traffic analysis, to infer internal states. The approach led to
-the discovery of 28 ROS2 software vulnerabilities, with 11 confirmed and fixed
-by developers, including 8 recognized by the US's CVE and 7 awaiting final
+methods, such as traffic analysis, to infer internal states. The approach led to the discovery of 28 ROS2 software vulnerabilities, with 11 confirmed and
+fixed by developers, including 8 recognized by the US's CVE and 7 awaiting final
 review by China's CNVD.
 
 This work demonstrates the high practical value of our fuzz testing framework
@@ -376,7 +375,18 @@ Heartbleed、Shellshock等），进一步证明了其有效性和重要性。
 \setParDis %设置段间距为 0
 \addcontentsline{toc}{section}{结论} % 将无标号章节添加至目录
 %@author: jfb
-傻逼冯如杯
+综上所述，本作品成功开发并应用了一种创新的针对ROS的模糊测试框架，进一步提高机器
+人应用程序的安全性和稳定性。通过对ROS系统进行深入的安全漏洞分析和测试，我们的框
+架能够自动化地生成测试用例，有效地识别和定位潜在的安全风险。本框架不仅实现了对基
+本ROS节点的广泛覆盖，还针对ROS2引入的新特性和改进进行了专门的测试和优化，确保了
+对最新ROS版本的全面支持。我们的框架采用了多种先进的模糊测试策略，包括基于属性的
+输入生成、时间序列分析以及动态行为监控等。这些策略的结合不仅大大提高了测试用例的
+有效性，还能够模拟复杂的操作环境，更准确地反映真实世界中的应用场景。
+
+经过对项目的广泛测试，本作品在测试程序中发现了28个真实漏洞，并提供了稳定的复现办
+法。这些成果已经向ROS社区反馈，并得到了部分漏洞的修复和更新。这不仅证明了我们框
+架的有效性与漏洞的价值，也为ROS系统的安全研究和开发提供了宝贵的实践经验和数据支
+持。
 
 %注意: 文件大小不超过5M。%
 

@@ -123,7 +123,7 @@ malloc对齐）的最小尺寸是$2^N$字节。每个影子字节描述了$2^N$�
 \textbf{ASan插桩模块}
 
 当对一个8字节的内存访问进行插桩时，AddressSanitizer计算相应影子字节的地址，加载
-该字节，并检查它是否为零，如代码段\ref{shadowaddr}所示。
+该字节，并检查它是否为零，如代码段\ref{lst:shadowaddr}所示。
 
 \begin{figure}[H]
 \begin{lstlisting}[language=C++]
@@ -175,7 +175,7 @@ malloc重新分配。目前，隔离区被实现为一个FIFO队列，随时持�
 库函数将红区标记为有毒，并记录地址以供进一步的错误报告。
 
 对于栈对象，红区在运行时创建并标记为有毒。目前，使用了32字节的红区（加上最多31字
-节用于对齐）。如代码段\ref{lst:asanfoo}中，给定程序\texttt{foo()}，为了检测对栈
+节用于对齐）。如代码段\ref{lst:asan}中，给定程序\texttt{foo()}，为了检测对栈
 对象的越界访问，AddressSanitizer对原有的函数foo进行了转换，增加了红区
 （redzones）来围绕数组arr。这些红区在运行时被标记为“有毒”的，用于捕获任何对这些
 区域的非法访问。
@@ -204,8 +204,8 @@ void foo() {
 	shadow[0] = shadow[1] = shadow[2] = 0;
 }
 \end{lstlisting}
-\label{lst:asanfoo}
 \caption{ASan程序转换示例}
+\label{lst:asan}
 \end{figure}
 
 同时，ASan是线程安全的。影子内存只在相应的应用程序内存不可访问时被修改（在malloc
